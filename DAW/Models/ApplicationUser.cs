@@ -7,13 +7,13 @@ namespace DAW.Models
     {
         public string Bio {  get; set; }
 
-        [Required(ErrorMessage = "First name required")]
+        //[Required(ErrorMessage = "First name required")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Last name required")]
+        //[Required(ErrorMessage = "Last name required")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "You must choose a visibility option")]
+        //[Required(ErrorMessage = "You must choose a visibility option")]
         public bool IsPublic { get; set; }
     }
 }
