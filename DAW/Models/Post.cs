@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAW.Models
 {
@@ -6,11 +7,16 @@ namespace DAW.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+
+        //[Required]
         public string Content { get; set; }
+
         public string Label { get; set; }
+
         public DateTime Date { get; set; }
+
         public int Likes { get; set; }
+
         public int Dislikes { get; set; }
         public string? UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }

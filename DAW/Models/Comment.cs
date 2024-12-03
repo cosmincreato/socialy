@@ -6,10 +6,11 @@ namespace DAW.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        //[Required]
         public string Content { get; set; }
         public DateTime Date { get; set; }
         public int? PostId { get; set; }
         public virtual Post? Post { get; set; }
+
     }
 }
