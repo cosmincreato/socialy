@@ -1,0 +1,7 @@
+﻿@foreach (var group in ViewBag.Groups)
+{
+    <p>@group.Name</p>
+    <p>@group.Description</p>
+    <p>@group.Label</p>
+    <p>@group.User.UserName</p>
+}
