@@ -15,5 +15,7 @@ namespace DAW.Models
 
         //[Required(ErrorMessage = "You must choose a visibility option")]
         public bool IsPublic { get; set; }
+
+        public ICollection<Post>? Posts { get; set; }
     }
 }
