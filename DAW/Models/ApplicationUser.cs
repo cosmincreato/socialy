@@ -17,5 +17,7 @@ namespace DAW.Models
         public bool IsPublic { get; set; }
 
         public ICollection<Post>? Posts { get; set; }
+        
+        public ICollection<GroupPost>? GroupPosts { get; set; }
     }
 }

@@ -15,5 +15,6 @@ namespace DAW.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupPost> GroupPosts { get; set; }
+
     }
 }

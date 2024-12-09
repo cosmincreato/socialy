@@ -17,5 +17,7 @@ namespace DAW.Models
         public string? UserId { get; set; }
 
         public virtual ApplicationUser? User { get; set; }
+
+        public virtual ICollection<GroupPost> Posts { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            ViewBag.Groups = db.Groups.Include("User");
+            ViewBag.Groups = db.Groups.Include(g => g.Posts).ThenInclude(p => p.User);
             return View();
         }
     }
