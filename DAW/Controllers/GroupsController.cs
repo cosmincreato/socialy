@@ -72,7 +72,6 @@ namespace DAW.Controllers
             if (db.UserGroups.Where(ui => ui.UserId == id && ui.GroupId == idGrup).FirstOrDefault() != null)
             {
                 ViewBag.EsteMembru = true;
-
             }
         }
     }

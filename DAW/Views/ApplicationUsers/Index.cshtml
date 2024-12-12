@@ -1,4 +1,21 @@
-﻿@foreach (var user in ViewBag.Users)
+﻿<h2>All Users</h2>
+
+@foreach (var user in ViewBag.Users)
 {
-    <p>@user.FirstName</p>
+    <div class="container mt-4">
+        <div class="card p-10 w-25">
+            <div class="d-flex align-items-center">
+                <img src="@Url.Content("~/images/chill.jpg")" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+
+                <div class="ms-3">
+                    <h5>@user.FirstName @user.LastName</h5>
+                    <p class="text-muted">@user.Bio</p>
+                </div>
+            </div>
+
+            <a class="btn btn-info" asp-controller="ApplicationUsers"
+               asp-action="Show" asp-route-id="@user.Id">Show Profile</a>
+        </div>
+    </div>
+	
 }
