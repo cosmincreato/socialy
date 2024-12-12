@@ -20,6 +20,6 @@ namespace DAW.Models
         
         public ICollection<GroupPost>? GroupPosts { get; set; }
 
-        public ICollection<UserGroup>? UserGroups { get; set; }
+        public virtual ICollection<UserGroup>? UserGroups { get; set; }
     }
 }

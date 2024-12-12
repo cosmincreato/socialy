@@ -1,0 +1,20 @@
+﻿<div class ="requests">
+    <h5>Join Requests: </h5>
+    <br />
+    @foreach (var req in ViewBag.Requests)
+    {
+        <p>@req.User.UserName</p>
+        <p>@req.Date</p>
+        <div class="options">
+            <form asp-action="Accept" asp-controller="Requests" method="post">
+                <input type="hidden" name="RequestId" value="@req.Id" />
+                <button type="submit" class="btn btn-primary">Accept</button
+            </form>
+            <form asp-action="Decline" asp-controller="Requests" method="post">
+                <input type="hidden" name="RequestId" value="@req.Id" />
+                <button type="submit" class="btn btn-primary">Decline</button>
+            </form>
+        </div>
+        <br />
+    }
+</div>

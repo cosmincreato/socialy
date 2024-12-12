@@ -9,9 +9,9 @@ namespace DAW.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "You can't submit an empty post")]
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
-        public string Label { get; set; }
+        public string? Label { get; set; }
 
         public DateTime Date { get; set; }
 

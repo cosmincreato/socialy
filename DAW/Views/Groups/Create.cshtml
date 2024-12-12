@@ -1,0 +1,21 @@
+﻿@model DAW.Models.Group
+
+<div class="group-form">
+    <form asp-action="Create" asp-controller="Groups" method="post">
+        <div class="form-group">
+            <label>Name</label>
+            <input name="Name" class="form-control" value="@Model.Name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input name="Description" class="form-control" value="@Model.Description">
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <laebl>Label</laebl>
+            <input name="Label" class="form-control" value="@Model.Label">
+        </div>
+        <button class="btn btn-success" type="submit">Create</button>
+    </form>
+</div>
