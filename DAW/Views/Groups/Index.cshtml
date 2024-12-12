@@ -6,12 +6,4 @@
     <p>@group.User.UserName</p>
     
     <br />
-
-    @foreach (var post in group.Posts)
-    {
-        <p>@post.User.UserName</p>
-        <p>@post.Content</p>
-        <p>Likes: @post.Likes   Dislikes: @post.Dislikes</p>
-        <br />
-    }
 }

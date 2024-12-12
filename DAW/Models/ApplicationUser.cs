@@ -19,5 +19,7 @@ namespace DAW.Models
         public ICollection<Post>? Posts { get; set; }
         
         public ICollection<GroupPost>? GroupPosts { get; set; }
+
+        public ICollection<UserGroup>? UserGroups { get; set; }
     }
 }

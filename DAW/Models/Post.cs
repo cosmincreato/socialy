@@ -8,7 +8,7 @@ namespace DAW.Models
         [Key]
         public int Id { get; set; }
 
-        //[Required]
+        [Required(ErrorMessage = "You can't submit an empty post")]
         public string Content { get; set; }
 
         public string Label { get; set; }
