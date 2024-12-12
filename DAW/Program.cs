@@ -3,6 +3,7 @@ using DAW.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +45,15 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "users",
+    pattern: "Profile/{id}",
+    defaults: new {Controller="ApplicationUsers", Action="Show"}
+    );
+
+app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=ApplicationUsers}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

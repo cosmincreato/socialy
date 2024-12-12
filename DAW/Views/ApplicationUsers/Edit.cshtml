@@ -1,0 +1,49 @@
+﻿@model DAW.Models.ApplicationUser
+
+<h2 class="text-center mt-5">Edit</h2>
+
+<br />
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-3">
+
+            <form method="post" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="FirstName" class="form-label">First Name</label>
+                    <br />
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                    <br /><br />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="LastName" class="form-label">Last Name</label>
+                    <br />
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+
+                    <br /><br />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Bio" class="form-label">Bio</label>
+                    <br />
+                    <textarea asp-for="Bio" class="form-control"></textarea>
+
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+
+                    <br /><br />
+                </div>
+
+                <button class="btn btn-sm btn-success" type="submit">Apply Changes</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
