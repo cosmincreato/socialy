@@ -19,7 +19,7 @@ namespace DAW.Models
 
         public virtual ApplicationUser? User { get; set; }
 
-        public virtual ICollection<GroupPost> Posts { get; set; }
+        public virtual ICollection<GroupPost>? Posts { get; set; }
         public ICollection<UserGroup>? UserGroups { get; set; }
 
         [NotMapped]
