@@ -1,0 +1,18 @@
+﻿@model DAW.Models.GroupPost
+
+<h5>Edit your post</h5>
+
+<br />
+<form method="post" asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@Model.Id">
+    <div class="form-post">
+        <label>Content</label>
+        <textarea name="Content" class="form-control">@Model.Content</textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+        <br />
+        <label>Label</label>
+        <input name="Label" class="form-control" value="@Model.Label">
+    </div>
+    <br />
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
