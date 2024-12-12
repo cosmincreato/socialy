@@ -4,6 +4,7 @@ using DAW.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAW.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241212154712_CommentsUID")]
+    partial class CommentsUID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,13 +82,6 @@ namespace DAW.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ProfileHandle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePicture")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -124,9 +120,6 @@ namespace DAW.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GroupPostId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PostId")
                         .HasColumnType("int");
 
@@ -134,8 +127,6 @@ namespace DAW.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupPostId");
 
                     b.HasIndex("PostId");
 
@@ -421,10 +412,6 @@ namespace DAW.Data.Migrations
 
             modelBuilder.Entity("DAW.Models.Comment", b =>
                 {
-                    b.HasOne("DAW.Models.GroupPost", "GroupPost")
-                        .WithMany()
-                        .HasForeignKey("GroupPostId");
-
                     b.HasOne("DAW.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId");
@@ -432,8 +419,6 @@ namespace DAW.Data.Migrations
                     b.HasOne("DAW.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("GroupPost");
 
                     b.Navigation("Post");
 

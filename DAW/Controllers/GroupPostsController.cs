@@ -40,7 +40,7 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Edit(int id)
         {
-            GroupPost groupPost = db.GroupPosts.Find(id);
+            GroupPost? groupPost = db.GroupPosts.Find(id);
             return View(groupPost);
 
         }
@@ -49,7 +49,7 @@ namespace DAW.Controllers
         [HttpPost]
         public IActionResult Edit(int id, GroupPost groupPost)
         {
-            GroupPost originalPost = db.GroupPosts.Find(id);
+            GroupPost? originalPost = db.GroupPosts.Find(id);
             if (ModelState.IsValid)
             {
                 originalPost.Content = groupPost.Content;
@@ -68,7 +68,7 @@ namespace DAW.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            GroupPost groupPost = db.GroupPosts.Find(id);
+            GroupPost? groupPost = db.GroupPosts.Find(id);
             db.GroupPosts.Remove(groupPost);
             db.SaveChanges();
             return Redirect("/Groups/Show/" + groupPost.GroupId);
