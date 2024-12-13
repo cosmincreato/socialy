@@ -1,14 +1,19 @@
-﻿
-@foreach (var group in ViewBag.Groups)
+﻿@foreach (var group in ViewBag.Groups)
 {
-    <div class="group-index">
-        <p>@group.Name</p>
-        <p>@group.Description</p>
-        <p>@group.Label</p>
-        <p>@group.User.UserName</p>
-        <a asp-action="Show" asp-controller="Groups" class="btn btn-primary" asp-route-id="@group.Id">Show</a>
+    <br />
+    <div class="card">
+        <h5 class="card-header">@group.Label Group</h5>
+        <div class="card-body">
+            <h5 class="card-title">@group.Name</h5>
+            <h6 class="card-text">@group.Description</h6>
+            <p class="card-text">@group.User.UserName</p>
+        </div>
+        <div class="d-felx">
+            <a asp-action="Show" asp-controller="Groups" asp-route-id="@group.Id" class="btn btn-primary">Show</a>
+        </div>
     </div>
 }
-<a asp-action="Create" asp-controller="Groups" class="btn btn-primary">New Group</a> 
 
+<br />
+<a asp-action="Create" asp-controller="Groups" class="btn btn-primary">New Group</a>
 <br />

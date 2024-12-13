@@ -6,11 +6,11 @@
 <form method="post" asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@Model.Id">
     <div class="form-post">
         <label>Content</label>
-        <textarea name="Content" class="form-control">@Model.Content</textarea>
+        <textarea name="Content" class="form-control" placeholder="Post content">@Model.Content</textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
         <br />
         <label>Label</label>
-        <input name="Label" class="form-control" value="@Model.Label">
+        <input name="Label" class="form-control" value="@Model.Label" placeholder="Post label">
     </div>
     <br />
     <button class="btn btn-primary" type="submit">Submit</button>
