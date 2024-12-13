@@ -29,26 +29,30 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Index()
         {
-            ViewBag.Groups = db.Groups.Include("User").ToList();
+            ViewBag.Groups = db.Groups.Include("User").OrderBy(g => g.Name);
+            ViewBag.EsteModerator = false;
             return View();
         }
 
         [Authorize(Roles = "Admin, User")]
         public IActionResult Show(int id)
         {
-            SetAccesRights(id);
+            System.Diagnostics.Debug.WriteLine("HEHEHEHAW" + id + "HEEHHEHAW");
             Group? grup = db.Groups.Include("User").Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(c => c.Comments).Where(g => g.Id == id).First();
+            grup.Posts = grup.Posts.OrderByDescending(p => p.Date).ToList();
+            SetAccesRights(grup.Id);
             return View(grup);
         }
 
         [Authorize(Roles = "Admin, User")]
         [HttpPost]
-        public IActionResult Show([FromForm] GroupPost groupPost)
+        public IActionResult Show([FromForm] GroupPost groupPost, int GroupId)
         {
             groupPost.Date = DateTime.Now;
             groupPost.UserId = _userManager.GetUserId(User);
             groupPost.Likes = 0;
             groupPost.Dislikes = 0;
+            groupPost.GroupId = GroupId;
             SetAccesRights(groupPost.GroupId);
 
             if (ModelState.IsValid)
@@ -97,7 +101,7 @@ namespace DAW.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            Group? group = db.Groups.Find(id);
+            Group? group = db.Groups.Include("Posts").Where(g => g.Id == id).First();
             db.Groups.Remove(group);
             db.SaveChanges();
             return Redirect("/Groups/Index");
@@ -148,9 +152,36 @@ namespace DAW.Controllers
         //    }
         //}
 
+        [Authorize(Roles="User, Admin")]
+        public IActionResult Edit(int id)
+        {
+            Group group = db.Groups.Find(id);
+            return View(group);
+        }
+
+        [Authorize(Roles="User, Admin")]
+        [HttpPost]
+        public IActionResult Edit(Group editedGroup,  int id)
+        {
+            Group group = db.Groups.Find(id);
+            if (ModelState.IsValid)
+            {
+                group.Name = editedGroup.Name;
+                group.Description = editedGroup.Description;
+                group.Label = editedGroup.Label;
+                db.SaveChanges();
+                return Redirect("/Groups/Index");
+            }
+            else
+            {
+                return View(editedGroup);
+            }
+        }
+
         [NonAction]
         private void SetAccesRights(int? idGrup)
         {
+            System.Diagnostics.Debug.WriteLine("-------" + idGrup + "---------");
             Group? group = db.Groups.Find(idGrup);
             var id = _userManager.GetUserId(User);
             ViewBag.EsteMembru = false;

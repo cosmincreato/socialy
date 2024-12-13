@@ -1,7 +1,7 @@
 ﻿@model DAW.Models.Group
 
 <div class="group-form">
-    <form asp-action="Create" asp-controller="Groups" method="post">
+    <form asp-action="Edit" asp-controller="Groups" method="post">
         <div class="form-group">
             <label>Name</label>
             <input name="Name" class="form-control" value="@Model.Name" placeholder="Group name">
@@ -16,6 +16,6 @@
             <laebl>Label</laebl>
             <input name="Label" class="form-control" value="@Model.Label" placeholder="Group label">
         </div>
-        <button class="btn btn-success" type="submit">Create</button>
+        <button class="btn btn-success" type="submit">Confirm</button>
     </form>
 </div>

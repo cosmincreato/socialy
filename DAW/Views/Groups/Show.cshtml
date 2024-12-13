@@ -1,40 +1,47 @@
 ﻿@model DAW.Models.Group
 
-<a asp-action="Members" asp-controller="Groups" asp-route-id="@Model.Id" class="btn btn-primary">Show Members</a>
+<div class="d-flex">
+    @if (ViewBag.EsteAdmin || ViewBag.EsteModerator)
+    {
+        <a asp-action="Edit" asp-controller="Groups" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    }
 
-@if (ViewBag.EsteMembru)
-{
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPost-@Model.Id">New Post</button>
-}
+    <a asp-action="Members" asp-controller="Groups" asp-route-id="@Model.Id" class="btn btn-primary">Show Members</a>
 
-@if (ViewBag.EsteAdmin || ViewBag.EsteModerator)
-{
-    <div class="delete">
-        <form asp-action="Delete" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
-            <button type="submit" class="btn btn-primary">Delete</button>
+    @if (ViewBag.EsteMembru)
+    {
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPost-@Model.Id">New Post</button>
+    }
+
+    @if (ViewBag.EsteAdmin || ViewBag.EsteModerator)
+    {
+        <div class="delete">
+            <form asp-action="Delete" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+        </div>
+    }
+
+    @if (ViewBag.EsteAdmin)
+    {
+        <div class="requests">
+            <a asp-action="Show" asp-controller="Requests" asp-route-id="@Model.Id" class="btn btn-primary">Show Requests</a>
+        </div>
+    }
+
+    @if (!ViewBag.EsteMembru && ViewBag.Clicked != true)
+    {
+        <form asp-action="Join" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn btn-primary">Join</button>
         </form>
-    </div>
-}
-
-@if (ViewBag.EsteAdmin)
-{
-    <div class="requests">
-        <a asp-action="Show" asp-controller="Requests" asp-route-id="@Model.Id" class="btn btn-primary">Show Requests</a>
-    </div>
-}
-
-@if (!ViewBag.EsteMembru && ViewBag.Clicked != true)
-{
-    <form asp-action="Join" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
-        <button type="submit" class="btn btn-primary">Join</button>
-    </form>
-}
-else if (ViewBag.Clicked == true && !ViewBag.EsteMembru)
-{
-    <form asp-action="Join" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
-        <button type="submit" class="btn btn-primary" disabled>Join</button>
-    </form>
-}
+    }
+    else if (ViewBag.Clicked == true && !ViewBag.EsteMembru)
+    {
+        <form asp-action="Join" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn btn-primary" disabled>Join</button>
+        </form>
+    }
+</div>
 
 <div class="modal fade" id="newPost-@Model.Id" tabindex="-1" aria-labelledby="newPostLabel-@Model.Id" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -43,17 +50,17 @@ else if (ViewBag.Clicked == true && !ViewBag.EsteMembru)
                 <h5 class="modal-title" id="newPostLabel-@Model.Id">Add a new group post</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
                 <form asp-action="Show" asp-controller="Groups" method="post">
                     <input type="hidden" name="GroupId" value="@Model.Id" />
                     <div class="form-group">
                         <label>Content</label>
-                        <textarea name="Content" class="form-control"></textarea>
+                        <textarea name="Content" class="form-control" placeholder="Post content"></textarea>
                         <span asp-validation-for="Content" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label>Label</label>
-                        <input name="Label" class="form-control">
+                        <input name="Label" class="form-control" placeholder="Post label">
                     </div>
                     <button class="btn btn-success" type="submit">Post</button>
                 </form>
@@ -64,14 +71,20 @@ else if (ViewBag.Clicked == true && !ViewBag.EsteMembru)
 
 <br />
 
-<div class="group-posts">
-    @foreach (var post in @Model.Posts)
-    {
-        <p>@post.User.UserName</p>
-        <p>@post.Content</p>
-        <p>Likes: @post.Likes   Dislikes: @post.Dislikes</p>
-        <br />
-        <div class="butoane">
+@foreach (var post in @Model.Posts)
+{
+    <br />
+    <br />
+    <div class="card mb-3" style="min-height: 200px;">
+        <div class="card-body d-flex flex-column">
+            <img class="card-img-top" src="" alt="Post Image" style="max-height: 200px; object-fit: cover;">
+            <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
+            <h5 class="card-title">@post.Content</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
+            <p class="card-text">@post.User.UserName</p>
+            <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
+        </div>
+        <div class="d-flex">
             @if (ViewBag.UserCurent == post.UserId || ViewBag.EsteAdmin)
             {
                 <a asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
@@ -80,26 +93,39 @@ else if (ViewBag.Clicked == true && !ViewBag.EsteMembru)
             {
                 <form method="post" asp-action="Delete" asp-controller="GroupPosts" asp-route-id="@post.Id">
                     <button type="submit" class="btn btn-primary">Delete</button>
-                </form>                
+                </form>
             }
         </div>
-        <div class="add-comments">
+
+        <br />
+        <div class="add-comments mt-3 mb-3">
             <input type="hidden" name="PostId" value="@post.Id" />
             <span asp-validation-for="Content" class="text-danger"></span>
-            <br />
             <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="Comments" asp-route-id="@post.Id">Add Comment</a>
         </div>
-        <div class="comments">
-            @foreach (var comment in post.Comments)
-            {
-                <p>@comment.Content</p>
-                <div class="d-flex">
-                    <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="comment.Id">Edit</a>
-                    <form asp-action="Delete" asp-controller="Comments" method="post">
-                        <button type="submit" class="btn btn-outline-primary">Delete</button>
-                    </form>
+
+        @foreach (var comment in post.Comments)
+        {
+            <div class="d-flex flex-column mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@comment.User.UserName</h5>
+                        <p class="card-text">@comment.Content</p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        @if (ViewBag.EsteAdmin || ViewBag.UserCurent == comment.UserId)
+                        {
+                            <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.Id">Edit</a>
+                        }
+                        @if (ViewBag.EsteAdmin || ViewBag.EsteModerator || ViewBag.UserCurent == comment.UserId)
+                        {
+                            <form asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id" method="post">
+                                <button type="submit" class="btn btn-outline-primary">Delete</button>
+                            </form>
+                        }
+                    </div>
                 </div>
-            }
-        </div>
-    }
-</div>
+            </div>
+        }
+    </div>
+}
