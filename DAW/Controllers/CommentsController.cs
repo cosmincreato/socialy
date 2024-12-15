@@ -27,6 +27,15 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult AddComment(int id)
         {
+            var groupPost = db.GroupPosts.First(gp => gp.Id == id);
+            var groupId = groupPost.GroupId;
+            var userGroup = db.UserGroups.Where(ug => ug.GroupId == groupId && ug.UserId == _userManager.GetUserId(User)).First();
+            if (userGroup == null && !User.IsInRole("Admin"))
+            {
+                TempData["message"] = "You don't have the permission to add a comment";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Groups/Show/" + groupId);
+            }
             Comment com = new();
             com.PostId = id;
             return View(com);
@@ -40,12 +49,16 @@ namespace DAW.Controllers
             if (ModelState.IsValid)
             {
                 com.PostId = GroupPostId;
-                var groupPost = db.GroupPosts.FirstOrDefault(gp => gp.Id == GroupPostId);
+                var groupPost = db.GroupPosts.First(gp => gp.Id == GroupPostId);
                 var groupId = groupPost.GroupId;
                 com.UserId = _userManager.GetUserId(User);
                 db.Comments.Add(com);
                 db.SaveChanges();
-                return Redirect("/Groups/Show/" + groupId);
+                var savedComment = db.Comments.FirstOrDefault(c => c.Id == com.Id);
+                TempData["message"] = "Comment added";
+                TempData["messageType"] = "alert-success";
+                System.Diagnostics.Debug.WriteLine("--------" + groupId);
+                return RedirectToAction("Show", "Groups", new { id = groupId });
             }
             else
             {
@@ -85,13 +98,25 @@ namespace DAW.Controllers
             db.SaveChanges();
             var groupPost = db.GroupPosts.FirstOrDefault(gp => gp.Id == com.PostId);
             var groupId = groupPost.GroupId;
-            return Redirect("/Groups/Show/" + groupId);
+            if (_userManager.GetUserId(User) != com.UserId && !User.IsInRole("Admin"))
+            {
+                TempData["message"] = "You don't have the permission to delete the comment";
+                TempData["messageType"] = "alert-danger";
+            }
+            TempData["message"] = "Comment deleted";
+            TempData["messageType"] = "alert-success";
+            return RedirectToAction("Show", "Groups", groupId);
         }
 
         [Authorize(Roles = ("Admin, User"))]
         public IActionResult Edit(int id)
         {
             Comment com = db.Comments.Find(id);
+            if (_userManager.GetUserId(User) != com.UserId && !User.IsInRole("Admin"))
+            {
+                TempData["message"] = "You don't have the permission to edit the comment";
+                TempData["messageType"] = "alert-danger";
+            }
             return View(com);
         }
 
@@ -107,7 +132,9 @@ namespace DAW.Controllers
                 db.SaveChanges();
                 var groupPost = db.GroupPosts.FirstOrDefault(gp => gp.Id == com.PostId);
                 var groupId = groupPost.GroupId;
-                return Redirect("/Groups/Show/" + groupId);
+                TempData["message"] = "Comment edited";
+                TempData["messageType"] = "alert-success";
+                return RedirectToAction("Show", "Groups", groupId);
             }
             else
             {
