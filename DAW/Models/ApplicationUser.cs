@@ -18,7 +18,7 @@ namespace DAW.Models
 
         public bool IsPublic { get; set; } = true;
 
-        public string? ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; } = "/images/no-picture.png";
 
         public ICollection<Post>? Posts { get; set; }
         

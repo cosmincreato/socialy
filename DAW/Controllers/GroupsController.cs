@@ -37,7 +37,6 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Show(int id)
         {
-            System.Diagnostics.Debug.WriteLine("HEHEHEHAW" + id + "HEEHHEHAW");
             Group? grup = db.Groups.Include("User").Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(c => c.Comments).Where(g => g.Id == id).First();
             grup.Posts = grup.Posts.OrderByDescending(p => p.Date).ToList();
             SetAccesRights(grup.Id);

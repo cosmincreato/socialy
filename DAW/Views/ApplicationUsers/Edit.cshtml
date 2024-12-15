@@ -1,6 +1,6 @@
 ﻿@model DAW.Models.ApplicationUser
 
-<h2 class="text-center mt-5">Edit</h2>
+<h2 class="text-center mt-5">Edit Profile Info</h2>
 
 <br />
 
@@ -8,9 +8,7 @@
     <div class="row">
         <div class="col-md-6 offset-3">
 
-            <form method="post" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">
-
-                <div asp-validation-summary="All" class="text-danger"></div>
+            <form enctype="multipart/form-data" method="post" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">
 
                 <div class="form-group">
                     <label asp-for="FirstName" class="form-label">First Name</label>
@@ -34,11 +32,35 @@
                     <label asp-for="Bio" class="form-label">Bio</label>
                     <br />
                     <textarea asp-for="Bio" class="form-control"></textarea>
-
                     <span asp-validation-for="Bio" class="text-danger"></span>
 
                     <br /><br />
                 </div>
+
+                <div class="form-group">
+                    <label asp-for="ProfilePicture">Upload Profile Picture</label>
+                    <br />
+                    <input asp-for="ProfilePicture" class="form-control" type="file" />
+                    <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                
+                    <br /><br />
+                </div>
+
+                <div class="form-group">
+                    <label>Profile Privacy</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="IsPublic" value="true" id="publicOption" />
+                        <label class="form-check-label" for="publicOption">Public</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="IsPublic" value="false" id="privateOption" />
+                        <label class="form-check-label" for="privateOption">Private</label>
+                    </div>
+
+                    <br /><br />
+                </div>
+
+                <br />
 
                 <button class="btn btn-sm btn-success" type="submit">Apply Changes</button>
 
