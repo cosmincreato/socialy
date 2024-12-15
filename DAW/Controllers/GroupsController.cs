@@ -31,16 +31,35 @@ namespace DAW.Controllers
         {
             ViewBag.Groups = db.Groups.Include("User").OrderBy(g => g.Name);
             ViewBag.EsteModerator = false;
+            ViewBag.Message = TempData["message"];
+            ViewBag.Alert = TempData["messageType"];
             return View();
         }
 
         [Authorize(Roles = "Admin, User")]
         public IActionResult Show(int id)
         {
-            System.Diagnostics.Debug.WriteLine("HEHEHEHAW" + id + "HEEHHEHAW");
-            Group? grup = db.Groups.Include("User").Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(c => c.Comments).Where(g => g.Id == id).First();
+            Group? grup = db.Groups.Include(g => g.User).Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(p => p.Comments).ThenInclude(u => u.User).Where(g => g.Id == id).First();
             grup.Posts = grup.Posts.OrderByDescending(p => p.Date).ToList();
             SetAccesRights(grup.Id);
+            ViewBag.Message = TempData["message"];
+            ViewBag.Alert = TempData["messageType"];
+            System.Diagnostics.Debug.WriteLine("--------------");
+            System.Diagnostics.Debug.WriteLine(grup.Id);
+            System.Diagnostics.Debug.WriteLine("START POSTS ID");
+            foreach (var post in grup.Posts)
+            {
+                System.Diagnostics.Debug.WriteLine(post.Id);
+                System.Diagnostics.Debug.WriteLine("START COMMENTS ID");
+                foreach (var com in post.Comments)
+                {
+                    System.Diagnostics.Debug.WriteLine(com.Id);
+                }
+                System.Diagnostics.Debug.WriteLine("END COMMENTS ID");
+            }
+            System.Diagnostics.Debug.WriteLine("END POSTS ID");
+
+            System.Diagnostics.Debug.WriteLine("--------------");
             return View(grup);
         }
 
@@ -54,12 +73,22 @@ namespace DAW.Controllers
             groupPost.Dislikes = 0;
             groupPost.GroupId = GroupId;
             SetAccesRights(groupPost.GroupId);
+            var isMember = db.UserGroups.Where(ui => ui.UserId == groupPost.UserId && ui.GroupId == GroupId).First();
+
+            if (isMember == null && !User.IsInRole("Admin"))
+            {
+                TempData["message"] = "You don't have the permission to post in this group";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Groups/Show/" + groupPost.GroupId);
+            }
 
             if (ModelState.IsValid)
             {
                 db.GroupPosts.Add(groupPost);
                 db.SaveChanges();
-                return Redirect("/Groups/Show/" + groupPost.GroupId);
+                TempData["message"] = "Post added";
+                TempData["messageType"] = "alert-success";
+                return RedirectToAction("Show", "Groups", groupPost.GroupId);
             }
             else
             {
@@ -89,6 +118,8 @@ namespace DAW.Controllers
                 ug.GroupId = group.Id;
                 db.UserGroups.Add(ug);
                 db.SaveChanges();
+                TempData["message"] = "Group created";
+                TempData["messageType"] = "alert-success";
                 return Redirect("/Groups/Index");
             }
             else
@@ -102,8 +133,16 @@ namespace DAW.Controllers
         public IActionResult Delete(int id)
         {
             Group? group = db.Groups.Include("Posts").Where(g => g.Id == id).First();
+            if (_userManager.GetUserId(User) != group.UserId && !User.IsInRole("Admin"))
+            {
+                TempData["message"] = "You don't have the permission to delete this group";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Groups/Index");
+            }
             db.Groups.Remove(group);
             db.SaveChanges();
+            TempData["message"] = "Group deleted";
+            TempData["messageType"] = "alert-success";
             return Redirect("/Groups/Index");
         }
 
@@ -118,7 +157,8 @@ namespace DAW.Controllers
             rq.Date = DateTime.Now;
             db.Requests.Add(rq);
             db.SaveChanges();
-            TempData["Sent"] = "Cererea a fost trimisa!";
+            TempData["message"] = "Request sent";
+            TempData["messageType"] = "alert-success";
             ViewBag.Clicked = true;
             return Redirect("/Groups/Show/" + id);
         }
@@ -126,7 +166,8 @@ namespace DAW.Controllers
         [Authorize(Roles="Admin, User")]
         public IActionResult Members(int id)
         {
-            ViewBag.Members = db.UserGroups.Include("User").Where(ug => ug.GroupId == id);
+            ViewBag.Members = db.UserGroups.Include("User").Include("Group").Where(ug => ug.GroupId == id);
+            SetAccesRights(id);
             return View();
         }
 
@@ -156,6 +197,12 @@ namespace DAW.Controllers
         public IActionResult Edit(int id)
         {
             Group group = db.Groups.Find(id);
+            if (_userManager.GetUserId(User) != group.UserId && !User.IsInRole("Admin"))
+            {
+                TempData["message"] = "You don't have the permission to delete this group";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Groups/Show/" + id);
+            }
             return View(group);
         }
 
@@ -170,6 +217,8 @@ namespace DAW.Controllers
                 group.Description = editedGroup.Description;
                 group.Label = editedGroup.Label;
                 db.SaveChanges();
+                TempData["message"] = "Group edited";
+                TempData["messageType"] = "alert-success";
                 return Redirect("/Groups/Index");
             }
             else
@@ -178,10 +227,53 @@ namespace DAW.Controllers
             }
         }
 
+        [Authorize(Roles="Admin, User")]
+        [HttpPost]
+        public IActionResult Leave(int id)
+        {
+            Group group = db.Groups.Find(id);
+            var userId = _userManager.GetUserId(User);
+            UserGroup ug = db.UserGroups.Where(u => u.GroupId == id && u.UserId == userId).First();
+            if (ug == null)
+            {
+                TempData["message"] = "You are not part of this group";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Groups/Index");
+            }
+            else
+            {
+                db.Remove(ug);
+                db.SaveChanges();
+                TempData["message"] = "You left the group";
+                TempData["messageType"] = "alert-success";
+                return Redirect("/Groups/Index");
+            }
+        }
+
+        [Authorize(Roles="Admin, User")]
+        [HttpPost]
+        public IActionResult Remove(int id, string userId)
+        {
+            UserGroup ug = db.UserGroups.Where(u => u.GroupId == id && u.UserId == userId).First();
+            if (ug == null)
+            {
+                TempData["message"] = "The user is not part of the group";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Groups/Members/" + id);
+            }
+            else
+            {
+                db.Remove(ug);
+                db.SaveChanges();
+                TempData["message"] = "The user was removed";
+                TempData["messageType"] = "alert-success";
+                return Redirect("/Groups/Members/" + id);
+            }
+        }
+
         [NonAction]
         private void SetAccesRights(int? idGrup)
         {
-            System.Diagnostics.Debug.WriteLine("-------" + idGrup + "---------");
             Group? group = db.Groups.Find(idGrup);
             var id = _userManager.GetUserId(User);
             ViewBag.EsteMembru = false;
