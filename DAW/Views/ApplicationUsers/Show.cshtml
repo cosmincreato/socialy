@@ -1,15 +1,23 @@
 ﻿@model DAW.Models.ApplicationUser
 
 <div class="container mt-4">
-    <div class="card p-10">
-            <img src="@Url.Content("~/images/chill.jpg")" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-
-            <div class="ms-3">
-                <h5>@Model.FirstName @Model.LastName</h5>
-                <p class="text-muted">@Model.Bio</p>
+    <div class="card p-10">            
+            <div class="ms-3 d-flex gap-3 align-items-center">
+                <!--Poza de profil-->
+                <img src="@Url.Content(Model.ProfilePicture)" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-dark" style="width: 168px; height: 168px; object-fit: cover;">
+                
+                <!--Nume si bio-->
+                <div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <h3>@Model.FirstName @Model.LastName</h3>
+                        @if (ViewBag.HasAccess)
+                        {
+                        <a class="btn btn-secondary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id"> <i class="bi bi-pencil"></i> Edit</a>
+                        }
+                    </div>
+                    <p class="text-muted">@Model.Bio</p>
+                </div>
             </div>
 
-            <a class="btn btn-secondary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            
             </div>
 </div>

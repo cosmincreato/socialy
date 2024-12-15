@@ -79,6 +79,9 @@ namespace DAW.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -117,9 +120,6 @@ namespace DAW.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GroupPostId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PostId")
                         .HasColumnType("int");
 
@@ -127,8 +127,6 @@ namespace DAW.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupPostId");
 
                     b.HasIndex("PostId");
 
@@ -414,10 +412,6 @@ namespace DAW.Data.Migrations
 
             modelBuilder.Entity("DAW.Models.Comment", b =>
                 {
-                    b.HasOne("DAW.Models.GroupPost", "GroupPost")
-                        .WithMany()
-                        .HasForeignKey("GroupPostId");
-
                     b.HasOne("DAW.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId");
@@ -425,8 +419,6 @@ namespace DAW.Data.Migrations
                     b.HasOne("DAW.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("GroupPost");
 
                     b.Navigation("Post");
 
