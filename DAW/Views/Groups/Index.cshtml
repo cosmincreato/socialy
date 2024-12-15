@@ -1,4 +1,10 @@
-﻿@foreach (var group in ViewBag.Groups)
+﻿@if (TempData["message"] != null)
+{
+    <div class="alert @ViewBag.Alert" role="alert">
+    @ViewBag.Message
+    </div>
+}
+@foreach (var group in ViewBag.Groups)
 {
     <br />
     <div class="card">

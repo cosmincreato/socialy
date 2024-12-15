@@ -1,6 +1,23 @@
-﻿
+﻿@if (TempData["message"] != null)
+{
+    <div class="alert @ViewBag.Alert" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
 @foreach (var relation in ViewBag.Members)
 {
-    <h1>@relation.User.UserName</h1>
+    <br/>
+    <div class="d-flex">
+        <a asp-controller="ApplicationUsers" asp-action="Show" asp-route-id="@relation.User.Id" class="btn btn-outline-primary"><h1>@relation.User.UserName</h1></a>
+
+        @if (@relation.Group.UserId != @relation.User.Id)
+        {
+            <form method="post" asp-action="Remove" asp-controller="Groups" asp-route-id="@relation.Group.Id">
+                <input type="hidden" value="@relation.User.Id" name="userId" />
+                <button type="submit" class="btn btn-primary">Remove</button>
+            </form>            
+        }
+    </div>
     <br />
 }
