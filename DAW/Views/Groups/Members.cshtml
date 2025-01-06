@@ -11,7 +11,7 @@
     <div class="d-flex">
         <a asp-controller="ApplicationUsers" asp-action="Show" asp-route-id="@relation.User.Id" class="btn btn-outline-primary"><h1>@relation.User.UserName</h1></a>
 
-        @if (@relation.Group.UserId != @relation.User.Id)
+        @if (@relation.Group.UserId != @relation.User.Id && (ViewBag.EsteModerator || ViewBag.EsteAdmin))
         {
             <form method="post" asp-action="Remove" asp-controller="Groups" asp-route-id="@relation.Group.Id">
                 <input type="hidden" value="@relation.User.Id" name="userId" />

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DAW.Controllers
 {
@@ -34,7 +35,8 @@ namespace DAW.Controllers
         [HttpPost]
         public IActionResult Accept(int RequestId)
         {
-            Request req = db.Requests.Find(RequestId);
+            Request? req = db.Requests.Find(RequestId);
+            int? groupId = req.GroupId;
             if (req != null)
             {
                 UserGroup ug = new();
@@ -45,21 +47,22 @@ namespace DAW.Controllers
                 db.SaveChanges();
             }
 
-            return Redirect("/Requests/Show");
+            return RedirectToAction("Show", "Requests", new { id = groupId });
         }
 
         [Authorize(Roles = "Admin, User")]
         [HttpPost]
         public IActionResult Decline(int RequestId)
         {
-            Request req = db.Requests.Find(RequestId);
+            Request? req = db.Requests.Find(RequestId);
+            int? groupId = req.GroupId;
             if (req != null)
             {
                 db.Requests.Remove(req);
                 db.SaveChanges();
             }
 
-            return Redirect("/Requests/Show");
+            return RedirectToAction("Show", "Requests", new { id = groupId });
         }
     }
 }
