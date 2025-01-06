@@ -31,9 +31,10 @@
         </div>
     }
 
-    @if (ViewBag.EsteAdmin)
+    @if (ViewBag.EsteAdmin || ViewBag.EsteModerator)
     {
-        <div class="requests">
+        <div class="re
+quests">
             <a asp-action="Show" asp-controller="Requests" asp-route-id="@Model.Id" class="btn btn-primary">Show Requests</a>
         </div>
     }
@@ -101,11 +102,11 @@
                 <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
             </div>
             <div class="d-flex">
-                @if (ViewBag.UserCurent == post.UserId || ViewBag.EsteAdmin)
+                @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin)
                 {
                     <a asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
                 }
-                @if (ViewBag.UserCurent == post.UserId || ViewBag.EsteAdmin || ViewBag.EsteModerator)
+                @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin || ViewBag.EsteModerator)
                 {
                     <form method="post" asp-action="Delete" asp-controller="GroupPosts" asp-route-id="@post.Id">
                         <button type="submit" class="btn btn-primary">Delete</button>
