@@ -40,13 +40,16 @@ namespace DAW.Controllers
         {
             ApplicationUser user = db.Users.Include("Posts")
               .Where(_user => _user.Id == id).First();
-
+            ViewBag.Message = TempData["message"];
+            ViewBag.Alert = TempData["messageType"];
+            AlreadySent(id);
+            AlreadyFriends(id);
             ViewBag.HasAccess = HasAccess(user);
 
             // daca profilul e privat, doar cei cu acces pot vedea
             if (!user.IsPublic)
                 {
-                    if (HasAccess(user))
+                    if (HasAccess(user) || ViewBag.AlreadyFriends == true)
                     {
                         return View(user);
                     }
@@ -120,10 +123,59 @@ namespace DAW.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public IActionResult Add(string id)
+        {
+            FriendRequest rq = new();
+            rq.Date = DateTime.Now;
+            rq.UserIdSender = _userManager.GetUserId(User);
+            rq.UserIdReceiver = id;
+            db.FriendRequests.Add(rq);
+            db.SaveChanges();
+            TempData["message"] = "Request sent";
+            TempData["messageType"] = "alert-success";
+            ViewBag.Clicked = true;
+            return RedirectToAction("Show", "ApplicationUsers", new { id = rq.UserIdReceiver });
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        public IActionResult Friends()
+        {
+            ViewBag.Friends = db.UserRelationships.Where(r => (r.UserId1 == _userManager.GetUserId(User)
+                                                                                    || r.UserId2 == _userManager.GetUserId(User))
+                                                                                    && r.Relation == "Friends").Include(r => r.User1).Include(r => r.User2);
+            ViewBag.CurrentUserId = _userManager.GetUserId(User);
+            return View();
+        }
+
         [NonAction]
         public bool HasAccess(ApplicationUser user)
         {
             return user.Id == _userManager.GetUserId(User) || User.IsInRole("Admin");
+        }
+
+        [NonAction]
+        public void AlreadySent(string id)
+        {
+            FriendRequest? rq = db.FriendRequests.Where(r => r.UserIdSender == _userManager.GetUserId(User) && r.UserIdReceiver == id).FirstOrDefault();
+            if (rq != null)
+            {
+                ViewBag.Clicked = true;
+            }
+        }
+
+        [NonAction]
+        public void AlreadyFriends(string id)
+        {
+            UserRelationships? ur = db.UserRelationships.Where(r => (r.UserId1 == id && r.UserId2 == _userManager.GetUserId(User))
+                                                                    || (r.UserId2 == id && r.UserId1 == _userManager.GetUserId(User))
+                                                                    && r.Relation == "Friends")
+                                                                    .FirstOrDefault();
+            if (ur != null)
+            {
+                ViewBag.AlreadyFriends = true;
+            }
         }
     }
 }

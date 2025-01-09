@@ -1,0 +1,20 @@
+﻿<div class="requests">
+    <h5>Friend Requests: </h5>
+    <br />
+    @foreach (var req in ViewBag.FriendRequests)
+    {
+        <p>@req.Sender.UserName</p>
+        <p>@req.Date</p>
+        <div class="options d-flex">
+            <form asp-action="Accept" asp-controller="FriendRequests" method="post">
+                <input type="hidden" name="RequestId" value="@req.Id" />
+                <button type="submit" class="btn btn-primary">Accept</button>
+            </form>
+            <form asp-action="Decline" asp-controller="FriendRequests" method="post">
+                <input type="hidden" name="RequestId" value="@req.Id" />
+                <button type="submit" class="btn btn-primary">Decline</button>
+            </form>
+        </div>
+        <br />
+    }
+</div>

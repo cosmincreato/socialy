@@ -4,6 +4,7 @@ using DAW.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAW.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250108121916_friendrequests")]
+    partial class friendrequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,32 +285,6 @@ namespace DAW.Data.Migrations
                     b.ToTable("UserGroups");
                 });
 
-            modelBuilder.Entity("DAW.Models.UserRelationships", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId2")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Relation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id", "UserId1", "UserId2");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasIndex("UserId2");
-
-                    b.ToTable("UserRelationships");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -546,25 +523,6 @@ namespace DAW.Data.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DAW.Models.UserRelationships", b =>
-                {
-                    b.HasOne("DAW.Models.ApplicationUser", "User1")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DAW.Models.ApplicationUser", "User2")
-                        .WithMany()
-                        .HasForeignKey("UserId2")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User1");
-
-                    b.Navigation("User2");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

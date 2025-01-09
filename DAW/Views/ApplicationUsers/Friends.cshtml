@@ -1,0 +1,11 @@
+﻿@foreach (var friend in ViewBag.Friends)
+{
+    @if (ViewBag.CurrentUserId != friend.UserId1)
+    {
+        <p>@friend.User1.UserName</p>
+    }
+    else 
+    {
+        <p>@friend.User2.UserName</p>
+    }
+} 

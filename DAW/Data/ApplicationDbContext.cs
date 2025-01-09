@@ -18,6 +18,8 @@ namespace DAW.Data
         public DbSet<GroupPost> GroupPosts { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Request> Requests { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
+        public DbSet<UserRelationships> UserRelationships { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +36,34 @@ namespace DAW.Data
                 .HasOne(x => x.Group)
                 .WithMany(x => x.UserGroups)
                 .HasForeignKey(x => x.GroupId);
+
+            modelBuilder.Entity<FriendRequest>().HasKey(x => new { x.Id, x.UserIdSender, x.UserIdReceiver });
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(ur => ur.Reciever)
+                .WithMany()
+                .HasForeignKey(ur => ur.UserIdReceiver)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(ur => ur.Sender)
+                .WithMany()
+                .HasForeignKey(ur => ur.UserIdSender)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserRelationships>().HasKey(x => new { x.Id, x.UserId1, x.UserId2 });
+
+            modelBuilder.Entity<UserRelationships>()
+                .HasOne(ur => ur.User1)
+                .WithMany()
+                .HasForeignKey(ur => ur.UserId1)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserRelationships>()
+                .HasOne(ur => ur.User2)
+                .WithMany()
+                .HasForeignKey(ur => ur.UserId2)
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
     }
