@@ -39,7 +39,7 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Show(int id)
         {
-            Group? grup = db.Groups.Include(g => g.User).Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(p => p.Comments).ThenInclude(u => u.User).Where(g => g.Id == id).First();
+            Group? grup = db.Groups.Include(g => g.User).Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(p => p.Comments).ThenInclude(u => u.User).Where(g => g.Id == id).FirstOrDefault();
             grup.Posts = grup.Posts.OrderByDescending(p => p.Date).ToList();
             SetAccesRights(grup.Id);
             ViewBag.Message = TempData["message"];
@@ -269,6 +269,35 @@ namespace DAW.Controllers
                 TempData["messageType"] = "alert-success";
                 return Redirect("/Groups/Members/" + id);
             }
+        }
+
+        [Authorize(Roles="Admin, User")]
+        [HttpPost]
+        public IActionResult Like(int id)
+        {
+            GroupPost? p = db.GroupPosts.Where(p => p.Id == id).FirstOrDefault();
+            if (p != null)
+            {
+                p.LikedBy.Add(_userManager.GetUserId(User));
+                p.Likes++;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Show", "Groups", new { id = p.GroupId });
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public IActionResult Dislike(int id)
+        {
+            GroupPost? p = db.GroupPosts.Where(p => p.Id == id).FirstOrDefault();
+            if (p != null)
+            {
+                p.DislikedBy.Add(_userManager.GetUserId(User));
+                p.Dislikes++;
+                db.SaveChanges();
+            }
+            
+            return RedirectToAction("Show", "Groups", new { id = p.GroupId });
         }
 
         [NonAction]

@@ -102,6 +102,22 @@ quests">
                 <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
             </div>
             <div class="d-flex">
+                @if (!post.DislikedBy.Contains(ViewBag.UserCurent) && !post.LikedBy.Contains(ViewBag.UserCurent))
+                {
+                    <form method="post" asp-action="Like" asp-controller="Groups" asp-route-id="@post.Id">
+                        <button type="submit" class="btn btn-primary">Like</button>
+                    </form>
+                    <form method="post" asp-action="Dislike" asp-controller="Groups" asp-route-id="@post.Id">
+                        <button type="submit" class="btn btn-primary">Dislike</button>
+                    </form>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary" disabled>Like</button>
+                    <button type="submit" class="btn btn-primary" disabled>Dislike</button>
+                }
+            </div>
+            <div class="d-flex">
                 @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin)
                 {
                     <a asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>

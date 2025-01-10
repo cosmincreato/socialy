@@ -94,10 +94,8 @@ namespace DAW.Controllers
         public IActionResult Delete(int id)
         {
             Comment? com = db.Comments.Find(id);
-            db.Comments.Remove(com);
-            db.SaveChanges();
-            var groupPost = db.GroupPosts.FirstOrDefault(gp => gp.Id == com.PostId);
-            var groupId = groupPost.GroupId;
+            GroupPost? groupPost = db.GroupPosts.Where(gp => gp.Id == com.PostId).FirstOrDefault();
+            int? groupId = groupPost.GroupId;
             if (_userManager.GetUserId(User) != com.UserId && !User.IsInRole("Admin"))
             {
                 TempData["message"] = "You don't have the permission to delete the comment";
@@ -105,7 +103,9 @@ namespace DAW.Controllers
             }
             TempData["message"] = "Comment deleted";
             TempData["messageType"] = "alert-success";
-            return RedirectToAction("Show", "Groups", groupId);
+            db.Comments.Remove(com);
+            db.SaveChanges();
+            return RedirectToAction("Show", "Groups", new { id = groupId });
         }
 
         [Authorize(Roles = ("Admin, User"))]
