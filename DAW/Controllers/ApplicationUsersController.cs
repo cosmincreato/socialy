@@ -56,6 +56,10 @@ namespace DAW.Controllers
                     }
                     return Forbid();
                 }
+            if (IsBlocked(id))
+            {
+                return Forbid();
+            }
             return View(user);
         }
 
@@ -222,6 +226,21 @@ namespace DAW.Controllers
             return RedirectToAction("Show", "ApplicationUsers", new { id = rq.UserIdReceiver });
         }
 
+        [Authorize(Roles="Admin, User")]
+        [HttpPost]
+        public IActionResult Block(string id)
+        {
+            UserRelationships ur = new();
+            ur.Relation = "Blocked";
+            ur.UserId1 = _userManager.GetUserId(User);
+            ur.UserId2 = id;
+            db.UserRelationships.Add(ur);
+            TempData["message"] = "Blocked";
+            TempData["messageType"] = "alert-success";
+            db.SaveChanges();
+            return RedirectToAction("Show", "ApplicationUsers", new { id = ur.UserId2 });
+        }
+
         [Authorize(Roles = "Admin, User")]
         public IActionResult Friends()
         {
@@ -230,6 +249,37 @@ namespace DAW.Controllers
                                                                                     && r.Relation == "Friends").Include(r => r.User1).Include(r => r.User2);
             ViewBag.CurrentUserId = _userManager.GetUserId(User);
             return View();
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public IActionResult RemoveFriend(string id)
+        {
+            UserRelationships? ur = db.UserRelationships.Where(ur => ((ur.UserId1 == _userManager.GetUserId(User) && ur.UserId2 == id)
+                                                                || (ur.UserId1 == id && ur.UserId2 == _userManager.GetUserId(User))) && ur.Relation == "Friends")
+                                                                .FirstOrDefault();
+            if (ur != null)
+            {
+                db.UserRelationships.Remove(ur);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Friends", "ApplicationUsers");
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public IActionResult Unblock(string id)
+        {
+            UserRelationships? ur = db.UserRelationships.Where(ur => ur.UserId1 == _userManager.GetUserId(User) && ur.UserId2 == id)
+                                                        .FirstOrDefault();
+            if (ur != null)
+            {
+                TempData["message"] = "Unblocked";
+                TempData["messageType"] = "alert-success";
+                db.UserRelationships.Remove(ur);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Show", "ApplicationUsers", new { id = id });
         }
 
         [NonAction]
@@ -270,7 +320,7 @@ namespace DAW.Controllers
             if (videoUrl.Contains("youtu.be/"))
             {
                 int startIndex = videoUrl.IndexOf("youtu.be/") + "youtu.be/".Length;
-                return videoUrl.Substring(startIndex, 11); // Extract 11-character ID
+                return videoUrl.Substring(startIndex, 11); 
             }
 
             if (videoUrl.Contains("v="))
@@ -280,12 +330,29 @@ namespace DAW.Controllers
                 int ampersandIndex = id.IndexOf("&");
                 if (ampersandIndex > -1)
                 {
-                    id = id.Substring(0, ampersandIndex); // Remove extra parameters
+                    id = id.Substring(0, ampersandIndex); 
                 }
                 return id;
             }
 
             return string.Empty;
+         }
+
+        [NonAction]
+        public bool IsBlocked(string id)
+        {
+            UserRelationships? ur = db.UserRelationships.Where(r => r.UserId2 == _userManager.GetUserId(User) && r.UserId1 == id).FirstOrDefault();
+            if (ur != null)
+            {
+                return true;
+            }
+            UserRelationships? ur2 = db.UserRelationships.Where(r => r.UserId1 == _userManager.GetUserId(User) && r.UserId2 == id).FirstOrDefault();
+            if (ur2 != null)
+            {
+                ViewBag.Blocked = true;
+            }
+            return false;
+
         }
     }
 }

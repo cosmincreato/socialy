@@ -15,6 +15,8 @@ namespace DAW.Models
         public int Dislikes { get; set; }
         public string? Image {  get; set; }
         public string? Video { get; set; }
+        public IList<string>? LikedBy { get; set; } = new List<string>();
+        public IList<string>? DislikedBy { get; set; } = new List<string>();
         public string? UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }

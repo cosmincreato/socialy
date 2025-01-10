@@ -21,22 +21,23 @@
                         {
                         <a class="btn btn-secondary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id"> <i class="bi bi-pencil"></i> Edit</a>
                         }
-                        @if (ViewBag.Clicked != true && !ViewBag.HasAccess && ViewBag.AlreadyFriends != true)
-                        {
+                        else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends!=true && ViewBag.Clicked!=true && ViewBag.Blocked!=true) {
                             <form asp-action="Add" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
                                 <button type="submit" class="btn btn-secondary">Add</button>
                             </form>
-                        }
-                        else if (ViewBag.Clicked == true && !ViewBag.HasAccess && ViewBag.AlreadyFriends != true)
-                        {
-                            <button class="btn btn-secondary" disabled>Add</button>
-                        }
-                        @if (!ViewBag.HasAccess)
-                        {
-                            <form method="post" asp-action="Block" asp-controller="ApplicationUsers" asp-route-id="@Model.Id">
+                            <form asp-action="Block" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
                                 <button type="submit" class="btn btn-secondary">Block</button>
                             </form>
-                        
+                        }
+                        else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends != true && ViewBag.Clicked == true && ViewBag.Blocked != true) {
+                            <button type="submit" class="btn btn-secondary" disabled>Add</button>
+                            <button type="submit" class="btn btn-secondary" disabled>Block</button>
+                        }
+                        else if (!ViewBag.HasAccess && ViewBag.Blocked == true) {
+                            <form asp-action="Unblock" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
+                                <button type="submit" class="btn btn-secondary">Unblock</button>
+                            </form>
+
                         }
                 </div>
                     <p class="text-muted">@Model.Bio</p>
