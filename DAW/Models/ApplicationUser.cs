@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAW.Models
 {
@@ -25,5 +26,13 @@ namespace DAW.Models
         public ICollection<GroupPost>? GroupPosts { get; set; }
 
         public virtual ICollection<UserGroup>? UserGroups { get; set; }
+        
+        //pentru posturi
+        [NotMapped]
+        public string? Content { get; set; }
+        [NotMapped]
+        public string? Image { get; set; }
+        [NotMapped]
+        public string? Video { get; set; }
     }
 }

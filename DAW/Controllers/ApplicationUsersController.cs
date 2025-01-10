@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
 
@@ -56,6 +57,88 @@ namespace DAW.Controllers
                     return Forbid();
                 }
             return View(user);
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public async Task<IActionResult> Show([FromForm] Post post, IFormFile image)
+        {
+
+            post.Date = DateTime.Now;
+            post.UserId = _userManager.GetUserId(User);
+            post.Likes = 0;
+            post.Dislikes = 0;
+
+            if (image != null && image.Length > 0)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif",
+".mp4", ".mov" };
+                var fileExtension = Path.GetExtension(image.FileName).ToLower();
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("Image", "The file must be an image (jpg, jpeg, png, gif) or a video (mp4, mov).");
+                    TempData["message"] = ModelState.Values
+                                     .SelectMany(v => v.Errors)
+                                     .Select(e => e.ErrorMessage)
+                                     .FirstOrDefault();
+                    TempData["messageType"] = "alert-danger";
+                    return RedirectToAction("Show", "ApplicationUsers", post.UserId);
+                }
+
+                var storagePath = Path.Combine(_env.WebRootPath, "images",
+                image.FileName);
+                var databaseFileName = "/images/" + image.FileName;
+
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(fileStream);
+                }
+
+                ModelState.Remove(nameof(post.Image));
+                post.Image = databaseFileName;
+            }
+            else
+            {
+                ModelState.Remove("Image");
+            }
+
+            if (post.Video != null && post.Video.Length > 0)
+            {
+                if (ExtractVideoId(post.Video) == string.Empty)
+                {
+                    ModelState.AddModelError("Video", "The URL must be from YouTube.");
+                    TempData["message"] = ModelState.Values
+                                     .SelectMany(v => v.Errors)
+                                     .Select(e => e.ErrorMessage)
+                                     .FirstOrDefault();
+                    TempData["messageType"] = "alert-danger";
+                    return RedirectToAction("Show", "ApplicationUsers", post.UserId);
+                }
+                post.Video = "https://youtube.com/embed/"+ExtractVideoId(post.Video);
+            }
+            else
+            {
+                ModelState.Remove("Video");
+            }
+
+
+            if (ModelState.IsValid)
+            {
+                db.Posts.Add(post);
+                db.SaveChanges();
+                TempData["message"] = "Post added";
+                TempData["messageType"] = "alert-success";
+                return RedirectToAction("Show", "ApplicationUsers", post.UserId);
+            }
+            else
+            {
+                TempData["message"] = ModelState.Values
+                                 .SelectMany(v => v.Errors)
+                                 .Select(e => e.ErrorMessage)
+                                 .FirstOrDefault();
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Show", "ApplicationUsers", post.UserId);
+            }
         }
 
         [Authorize(Roles = "Admin, User")]
@@ -176,6 +259,33 @@ namespace DAW.Controllers
             {
                 ViewBag.AlreadyFriends = true;
             }
+        }
+
+        [NonAction]
+        public string ExtractVideoId(string videoUrl)
+        {
+            if (string.IsNullOrWhiteSpace(videoUrl))
+                return string.Empty;
+
+            if (videoUrl.Contains("youtu.be/"))
+            {
+                int startIndex = videoUrl.IndexOf("youtu.be/") + "youtu.be/".Length;
+                return videoUrl.Substring(startIndex, 11); // Extract 11-character ID
+            }
+
+            if (videoUrl.Contains("v="))
+            {
+                int startIndex = videoUrl.IndexOf("v=") + "v=".Length;
+                string id = videoUrl.Substring(startIndex);
+                int ampersandIndex = id.IndexOf("&");
+                if (ampersandIndex > -1)
+                {
+                    id = id.Substring(0, ampersandIndex); // Remove extra parameters
+                }
+                return id;
+            }
+
+            return string.Empty;
         }
     }
 }

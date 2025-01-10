@@ -1,0 +1,26 @@
+﻿@model DAW.Models.Post
+
+<h5>Edit your post</h5>
+
+<br />
+<form enctype="multipart/form-data"  method="post" asp-action="Edit" asp-controller="Posts" asp-route-id="@Model.Id">
+    <div class="form-post">
+        <label>Content</label>
+        <textarea name="Content" class="form-control" placeholder="Post content">@Model.Content</textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+        <br />
+        
+        <label>Label</label>
+        <input name="Label" class="form-control" value="@Model.Label" placeholder="Post label">
+        <br />
+
+        <label asp-for="Video">Enter Video URL</label>
+        <input name="Video" class="form-control" value="@Model.Video" placeholder="Video URL">
+
+		<br /><br />
+    </div>
+
+    <br />
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+

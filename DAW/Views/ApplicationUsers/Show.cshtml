@@ -25,7 +25,7 @@
                         {
                             <form asp-action="Add" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
                                 <button type="submit" class="btn btn-secondary">Add</button>
-                        </form>
+                            </form>
                         }
                         else if (ViewBag.Clicked == true && !ViewBag.HasAccess && ViewBag.AlreadyFriends != true)
                         {
@@ -42,6 +42,102 @@
                     <p class="text-muted">@Model.Bio</p>
                 </div>
             </div>
+    </div>
+</div>
 
+<div class="modal fade" id="newPost-@Model.Id" tabindex="-1" aria-labelledby="newPostLabel-@Model.Id" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newPostLabel-@Model.Id">Create post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+
+                <form enctype="multipart/form-data" asp-action="Show" asp-controller="ApplicationUsers" method="post">
+                    <input type="hidden" name="UserId" value="@Model.Id" />
+
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea name="Content" class="form-control" placeholder="Post content"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+
+                        <br /><br />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input name="Label" class="form-control" placeholder="Post label">
+
+                        <br /><br />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Image">Upload Image</label>
+                        <br />
+                        <input asp-for="Image" class="form-control" type="file" />
+                        <span asp-validation-for="Image" class="text-danger"></span>
+
+                        <br /><br />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Video">Enter Video URL</label>
+                        <input name="Video" class="form-control" placeholder="Video URL">
+
+                        <br /><br />
+                    </div>
+
+                    <button class="btn btn-success" type="submit">Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <h4>Posts</h4>
+    @if (ViewBag.HasAccess)
+    {
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPost-@Model.Id">New Post</button>
+    }
+    @if (Model.Posts != null) {
+        @foreach (Post post in @Model.Posts)
+        {
+            <br />
+            <br />
+            <div class="card p-10" style="min-height: 200px;">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
+                    @if (@post.Image != null)
+                    {
+                        <img src="@Url.Content(@post.Image)" alt="Image" class="rounded img-fluid" style="width: 250px; height: 250px; object-fit: cover;" />
+                    }
+                    @if (post.Video != null)
+                    {
+                        <div class="video-container">
+                            <iframe width="560" height="315"
+                                    src=@post.Video
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    }
+                    <h5 class="card-title">@post.Content</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
+                    <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
+                </div>
+                <div class="d-flex">
+                @if (ViewBag.HasAccess)
+                {
+                    <a asp-action="Edit" asp-controller="Posts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
+                    <form method="post" asp-action="Delete" asp-controller="Posts" asp-route-id="@post.Id">
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                }
+                </div>
+            </div>
+        }
+    }
 </div>
