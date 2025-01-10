@@ -6,7 +6,7 @@
 <form method="post" asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@Model.Id">
     <div class="form-post">
         <label>Content</label>
-        <textarea name="Content" class="form-control" placeholder="Post content">@Model.Content</textarea>
+        <textarea name="Content" class="form-control" placeholder="Post content">@Html.Raw(Model.Content)</textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
         <br />
         <label>Label</label>
