@@ -2,10 +2,22 @@
 {
     @if (ViewBag.CurrentUserId != friend.UserId1)
     {
-        <p>@friend.User1.UserName</p>
+        <div class="d-flex">
+            <img src="@Url.Content(friend.User1.ProfilePicture)" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-dark" style="width: 168px; height: 168px; object-fit: cover;">
+            <p>@friend.User1.UserName</p>
+            <form method="post" asp-action="RemoveFriend" asp-controller="ApplicationUsers" asp-route-id="@friend.UserId1">
+                <button type="submit" class="btn btn-primary">Remove</button>
+            </form>
+        </div>
     }
     else 
     {
-        <p>@friend.User2.UserName</p>
+        <div class="d-flex">
+            <img src="@Url.Content(friend.User2.ProfilePicture)" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-dark" style="width: 168px; height: 168px; object-fit: cover;">
+            <p>@friend.User2.UserName</p>
+            <form method="post" asp-action="RemoveFriend" asp-controller="ApplicationUsers" asp-route-id="@friend.UserId2">
+                <button type="submit" class="btn btn-primary">Remove</button>
+            </form>
+        </div>
     }
 } 

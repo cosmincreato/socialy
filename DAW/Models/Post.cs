@@ -13,6 +13,8 @@ namespace DAW.Models
         public DateTime Date { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }
+        public IList<string>? LikedBy { get; set; } = new List<string>();
+        public IList<string>? DislikedBy { get; set; } = new List<string>();
         public string? UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
