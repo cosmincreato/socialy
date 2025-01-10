@@ -29,10 +29,23 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Index()
         {
-            ViewBag.Groups = db.Groups.Include("User").OrderBy(g => g.Name);
+            //ViewBag.Groups = db.Groups.Include("User").OrderBy(g => g.Name);
             ViewBag.EsteModerator = false;
             ViewBag.Message = TempData["message"];
             ViewBag.Alert = TempData["messageType"];
+                        int _perPage = 5;
+            var groups = db.Groups.Include("User").OrderBy(g => g.Name);
+            int totalItems = groups.Count();
+            var offset = 0;
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+            var paginatedGroups = groups.Skip(offset).Take(_perPage);
+            ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.Groups = paginatedGroups;
+            ViewBag.PaginationBaseUrl = "/Groups/Index/?page";
             return View();
         }
 
@@ -40,26 +53,22 @@ namespace DAW.Controllers
         public IActionResult Show(int id)
         {
             Group? grup = db.Groups.Include(g => g.User).Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(p => p.Comments).ThenInclude(u => u.User).Where(g => g.Id == id).FirstOrDefault();
-            grup.Posts = grup.Posts.OrderByDescending(p => p.Date).ToList();
             SetAccesRights(grup.Id);
             ViewBag.Message = TempData["message"];
             ViewBag.Alert = TempData["messageType"];
-            System.Diagnostics.Debug.WriteLine("--------------");
-            System.Diagnostics.Debug.WriteLine(grup.Id);
-            System.Diagnostics.Debug.WriteLine("START POSTS ID");
-            foreach (var post in grup.Posts)
+            int _perPage = 5;
+            var posts = db.GroupPosts.Include(p => p.User).Include(p => p.Comments).Where(p => p.GroupId == grup.Id).OrderByDescending(p => p.Date);
+            int totalItems = posts.Count();
+            var offset = 0;
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+            if (!currentPage.Equals(0))
             {
-                System.Diagnostics.Debug.WriteLine(post.Id);
-                System.Diagnostics.Debug.WriteLine("START COMMENTS ID");
-                foreach (var com in post.Comments)
-                {
-                    System.Diagnostics.Debug.WriteLine(com.Id);
-                }
-                System.Diagnostics.Debug.WriteLine("END COMMENTS ID");
+                offset = (currentPage - 1) * _perPage;
             }
-            System.Diagnostics.Debug.WriteLine("END POSTS ID");
-
-            System.Diagnostics.Debug.WriteLine("--------------");
+            var paginatedPosts = posts.Skip(offset).Take(_perPage);
+            ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.Posts = paginatedPosts;
+            ViewBag.PaginationBaseUrl = "/Groups/Show/" + grup.Id + "?page";
             return View(grup);
         }
 
@@ -170,28 +179,6 @@ namespace DAW.Controllers
             SetAccesRights(id);
             return View();
         }
-
-        //[Authorize(Roles = "Admin, User")]
-        //[HttpPost]
-        //public IActionResult Show([FromForm] Comment com)
-        //{
-        //    com.Date = DateTime.Now;
-        //    com.UserId = _userManager.GetUserId(User);
-        //    var groupId = db.GroupPosts.First(g => g.Id == com.PostId).GroupId;
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Comments.Add(com);
-        //        db.SaveChanges();
-        //        return Redirect("/Groups/Show/" + groupId);
-        //    }
-        //    else
-        //    {
-        //        Group group = db.Groups.Include("User").Include(g => g.Posts).ThenInclude(p => p.User).Include(g => g.Posts).ThenInclude(c => c.Comments).Where(g => g.Id == groupId).First();
-        //        SetAccesRights(group.Id);
-        //        return View(group);
-        //    }
-        //}
 
         [Authorize(Roles="User, Admin")]
         public IActionResult Edit(int id)
