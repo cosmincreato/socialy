@@ -1,4 +1,5 @@
-﻿
+﻿<h2>All Users</h2>
+
 @foreach (var user in ViewBag.Users)
 {
     <div class="container mt-4">
@@ -16,5 +17,5 @@
                asp-action="Show" asp-route-id="@user.Id">Show Profile</a>
         </div>
     </div>
-	
+
 }

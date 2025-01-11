@@ -33,14 +33,29 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Index()
         {
-            ViewBag.Users = db.Users.Include("Posts");
+            var search = "";
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+            }
+            List<string> usersId = db.Users.Where(u => u.FirstName == search || u.LastName == search)
+                                .OrderByDescending(u => u.UserName).Select(u => u.Id).ToList();
+            ViewBag.SearchString = search;
+            ViewBag.Users = db.Users.Include(u => u.Posts).Where(u => usersId.Contains(u.Id)).OrderByDescending(u => u.UserName);
+            return View();
+        }
+
+        [Authorize(Roles="Admin, User")]
+        public IActionResult ShowAll()
+        {
+            ViewBag.Users = db.Users.Include("Posts").OrderByDescending(u => u.UserName);
             return View();
         }
 
         [Authorize(Roles = "Admin, User")]
         public IActionResult Show(string id)
         {
-            ApplicationUser user = db.Users.Include(p => p.Posts).ThenInclude(c => c.Comments)
+            ApplicationUser user = db.Users.Include(p => p.Posts).ThenInclude(c => c.Comments).ThenInclude(u => u.User)
               .Where(_user => _user.Id == id).First();
             var posts = db.Posts.Include(p => p.User).Include(p => p.Comments).Where(p => p.UserId == user.Id).OrderByDescending(p => p.Date);
             int _perPage = 5;
