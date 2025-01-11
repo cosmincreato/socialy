@@ -8,41 +8,44 @@
 }
 
 <div class="container mt-4">
-    <div class="card p-10">            
-            <div class="ms-3 d-flex gap-3 align-items-center">
-                <!--Poza de profil-->
-                <img src="@Url.Content(Model.ProfilePicture)" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-dark" style="width: 168px; height: 168px; object-fit: cover;">
-                
-                <!--Nume si bio-->
-                <div>
-                    <div class="d-flex gap-2 align-items-center">
-                        <h3>@Model.FirstName @Model.LastName</h3>
-                        @if (ViewBag.HasAccess)
-                        {
-                        <a class="btn btn-secondary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id"> <i class="bi bi-pencil"></i> Edit</a>
-                        }
-                        else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends!=true && ViewBag.Clicked!=true && ViewBag.Blocked!=true) {
-                            <form asp-action="Add" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
-                                <button type="submit" class="btn btn-secondary">Add</button>
-                            </form>
-                            <form asp-action="Block" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
-                                <button type="submit" class="btn btn-secondary">Block</button>
-                            </form>
-                        }
-                        else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends != true && ViewBag.Clicked == true && ViewBag.Blocked != true) {
-                            <button type="submit" class="btn btn-secondary" disabled>Add</button>
-                            <button type="submit" class="btn btn-secondary" disabled>Block</button>
-                        }
-                        else if (!ViewBag.HasAccess && ViewBag.Blocked == true) {
-                            <form asp-action="Unblock" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
-                                <button type="submit" class="btn btn-secondary">Unblock</button>
-                            </form>
+    <div class="card rounded">
+        <!--Banner-->
+        <div class="profile-banner rounded-top"></div>
+        <!--Poza de profil-->
+        <img src="@Url.Content(Model.ProfilePicture)" alt="Profile Picture" class="profile-picture rounded-circle img-fluid border border-3 border-white">
+        <div class="profile-info">
+            <!--Nume si bio-->
+            <div>
+                <div class="d-flex gap-2 align-items-center justify-content-between">
+                    <h3>@Model.FirstName @Model.LastName</h3>
+                    <!--Buton de edit-->
+                    @if (ViewBag.HasAccess)
+                    {
+                        <a style="margin-right: 1.5rem;" class="btn btn-primary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">Edit profile</a>
+                    }
+                    else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends!=true && ViewBag.Clicked!=true && ViewBag.Blocked!=true) {
+                        <form asp-action="Add" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </form>
+                        <form asp-action="Block" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Block</button>
+                        </form>
+                    }
+                    else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends != true && ViewBag.Clicked == true && ViewBag.Blocked != true) {
+                        <button type="submit" class="btn btn-secondary" disabled>Add</button>
+                        <button type="submit" class="btn btn-secondary" disabled>Block</button>
+                    }
+                    else if (!ViewBag.HasAccess && ViewBag.Blocked == true) {
+                        <form asp-action="Unblock" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
+                            <button type="submit" class="btn btn-secondary">Unblock</button>
+                        </form>
 
-                        }
+                    }
                 </div>
-                    <p class="text-muted">@Model.Bio</p>
-                </div>
+                <p class="text-muted">@Model.Bio</p>
+                <p><b>@ViewBag.FriendCount</b> friends</p>
             </div>
+        </div>
     </div>
 </div>
 

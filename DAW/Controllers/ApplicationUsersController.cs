@@ -63,6 +63,10 @@ namespace DAW.Controllers
             CurrentUser(id);
             ViewBag.HasAccess = HasAccess(user);
 
+            //
+            ViewBag.FriendCount = GetFriendCount(id);
+
+
             // daca profilul e privat, doar cei cu acces pot vedea
             if (!user.IsPublic)
                 {
@@ -385,6 +389,16 @@ namespace DAW.Controllers
         public void CurrentUser(string id)
         {
             ViewBag.CurrentUser = _userManager.GetUserId(User);
+        }
+
+        [NonAction]
+        public int GetFriendCount(string id)
+        {
+            var friendCount = db.UserRelationships
+                .Where(r => r.Relation == "Friends" && (r.UserId1 == id || r.UserId2 == id))
+                .Count();
+
+            return friendCount;
         }
     }
 }
