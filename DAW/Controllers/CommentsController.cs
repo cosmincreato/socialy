@@ -57,7 +57,6 @@ namespace DAW.Controllers
                 var savedComment = db.Comments.FirstOrDefault(c => c.Id == com.Id);
                 TempData["message"] = "Comment added";
                 TempData["messageType"] = "alert-success";
-                System.Diagnostics.Debug.WriteLine("--------" + groupId);
                 return RedirectToAction("Show", "Groups", new { id = groupId });
             }
             else

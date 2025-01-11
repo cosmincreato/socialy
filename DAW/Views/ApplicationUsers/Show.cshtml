@@ -47,7 +47,7 @@
 </div>
 
 <div class="modal fade" id="newPost-@Model.Id" tabindex="-1" aria-labelledby="newPostLabel-@Model.Id" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="newPostLabel-@Model.Id">Create post</h5>
@@ -103,42 +103,96 @@
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPost-@Model.Id">New Post</button>
     }
     @if (Model.Posts != null) {
-        @foreach (Post post in @Model.Posts)
+        @foreach (Post post in ViewBag.Posts)
         {
-            <br />
-            <br />
-            <div class="card p-10" style="min-height: 200px;">
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
-                    @if (@post.Image != null)
+            @if (post is not GroupPost)
+            {
+                <br />
+                <br />
+                <div class="card p-10" style="min-height: 200px;">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
+                        @if (@post.Image != null)
+                        {
+                            <img src="@Url.Content(@post.Image)" alt="Image" class="rounded img-fluid" style="width: 250px; height: 250px; object-fit: cover;" />
+                        }
+                        @if (post.Video != null)
+                        {
+                            <div class="video-container">
+                                <iframe width="560" height="315"
+                                        src=@post.Video
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                </iframe>
+                            </div>
+                        }
+                        <h5 class="card-title">@Html.Raw(post.Content)</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
+                        <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
+                    </div>
+                    <div class="d-flex">
+                    @if (ViewBag.HasAccess)
                     {
-                        <img src="@Url.Content(@post.Image)" alt="Image" class="rounded img-fluid" style="width: 250px; height: 250px; object-fit: cover;" />
+                        <a asp-action="Edit" asp-controller="Posts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
+                        <form method="post" asp-action="Delete" asp-controller="Posts" asp-route-id="@post.Id">
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                        </form>
                     }
-                    @if (post.Video != null)
+                    </div>
+                <div class="add-comments mt-3 mb-3">
+                    <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="UserComments" asp-route-id="@post.Id">Add Comment</a>
+                </div>
+                @if (post.Comments != null && post.Comments.Any()) {
+                    @foreach (Comment comment in post.Comments)
                     {
-                        <div class="video-container">
-                            <iframe width="560" height="315"
-                                    src=@post.Video
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                            </iframe>
+                        <div class="d-flex flex-column mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@comment.User.UserName</h5>
+                                    <p class="card-text">@Html.Raw(comment.Content)</p>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    @if (ViewBag.IsAdmin || ViewBag.CurrentUser == comment.UserId)
+                                    {
+                                        <a class="btn btn-outline-primary" asp-controller="UserComments" asp-action="Edit" asp-route-id="@comment.Id">Edit</a>
+                                        <form asp-action="Delete" asp-controller="UserComments" asp-route-id="@comment.Id" method="post">
+                                            <button type="submit" class="btn btn-outline-primary">Delete</button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     }
-                    <h5 class="card-title">@post.Content</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
-                    <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
-                </div>
-                <div class="d-flex">
-                @if (ViewBag.HasAccess)
-                {
-                    <a asp-action="Edit" asp-controller="Posts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
-                    <form method="post" asp-action="Delete" asp-controller="Posts" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                    </form>
                 }
-                </div>
-            </div>
+                </div> 
+            }
         }
     }
+</div>
+
+<div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i <= ViewBag.LastPage; i++)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                </li>
+            }
+            <li class="page-item">
+                <a class="page-link"
+                   href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>

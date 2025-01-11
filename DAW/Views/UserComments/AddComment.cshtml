@@ -1,0 +1,12 @@
+﻿@model DAW.Models.Comment
+<div class="group-form">
+    <form asp-action="AddComment" asp-controller="UserComments" method="post">
+        <div class="form-group">
+            <input type="hidden" name="PostId" value="@Model.PostId" />
+            <label>Content</label>
+            <textarea name="Content" class="form-control" placeholder="Comment">@Model.Content</textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+        <button class="btn btn-success" type="submit">Send</button>
+    </form>
+</div>

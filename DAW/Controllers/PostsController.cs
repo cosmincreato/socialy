@@ -38,7 +38,7 @@ namespace DAW.Controllers
 
         [Authorize(Roles = "Admin, User")]
         [HttpPost]
-		public async Task<IActionResult> Edit(int id, Post post, IFormFile image)
+		public async Task<IActionResult> Edit(int id, Post post)
         {
             Post? originalPost = db.Posts.Find(id);
             //

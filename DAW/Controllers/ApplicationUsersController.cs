@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace DAW.Controllers
 {
@@ -39,12 +40,27 @@ namespace DAW.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Show(string id)
         {
-            ApplicationUser user = db.Users.Include("Posts")
+            ApplicationUser user = db.Users.Include(p => p.Posts).ThenInclude(c => c.Comments)
               .Where(_user => _user.Id == id).First();
+            var posts = db.Posts.Include(p => p.User).Include(p => p.Comments).Where(p => p.UserId == user.Id).OrderByDescending(p => p.Date);
+            int _perPage = 5;
+            var offset = 0;
+            var totalItems = posts.Where(p => !(p is GroupPost)).Count();
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+            var paginatedPosts = posts.Skip(offset).Take(_perPage);
+            ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.Posts = paginatedPosts;
+            ViewBag.PaginationBaseUrl = "/ApplicationUsers/Show/" + user.Id + "?page";
             ViewBag.Message = TempData["message"];
             ViewBag.Alert = TempData["messageType"];
             AlreadySent(id);
             AlreadyFriends(id);
+            IsAdmin();
+            CurrentUser(id);
             ViewBag.HasAccess = HasAccess(user);
 
             // daca profilul e privat, doar cei cu acces pot vedea
@@ -353,6 +369,22 @@ namespace DAW.Controllers
             }
             return false;
 
+        }
+
+        [NonAction]
+        public void IsAdmin()
+        {
+            ViewBag.IsAdmin = false;
+            if (User.IsInRole("Admin"))
+            {
+                ViewBag.IsAdmin = true;
+            }
+        }
+
+        [NonAction]
+        public void CurrentUser(string id)
+        {
+            ViewBag.CurrentUser = _userManager.GetUserId(User);
         }
     }
 }
