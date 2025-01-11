@@ -313,6 +313,35 @@ namespace DAW.Controllers
             return RedirectToAction("Show", "ApplicationUsers", new { id = id });
         }
 
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public IActionResult Like(int id)
+        {
+            Post? p = db.Posts.Where(p => p.Id == id).FirstOrDefault();
+            if (p != null)
+            {
+                p.LikedBy.Add(_userManager.GetUserId(User));
+                p.Likes++;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Show", "ApplicationUsers", new { id = p.UserId });
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost]
+        public IActionResult Dislike(int id)
+        {
+            Post? p = db.Posts.Where(p => p.Id == id).FirstOrDefault();
+            if (p != null)
+            {
+                p.DislikedBy.Add(_userManager.GetUserId(User));
+                p.Dislikes++;
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Show", "ApplicationUsers", new { id = p.UserId });
+        }
+
         [NonAction]
         public bool HasAccess(ApplicationUser user)
         {
@@ -372,12 +401,12 @@ namespace DAW.Controllers
         [NonAction]
         public bool IsBlocked(string id)
         {
-            UserRelationships? ur = db.UserRelationships.Where(r => r.UserId2 == _userManager.GetUserId(User) && r.UserId1 == id).FirstOrDefault();
+            UserRelationships? ur = db.UserRelationships.Where(r => (r.UserId2 == _userManager.GetUserId(User) && r.UserId1 == id) && r.Relation == "Blocked").FirstOrDefault();
             if (ur != null)
             {
                 return true;
             }
-            UserRelationships? ur2 = db.UserRelationships.Where(r => r.UserId1 == _userManager.GetUserId(User) && r.UserId2 == id).FirstOrDefault();
+            UserRelationships? ur2 = db.UserRelationships.Where(r => (r.UserId1 == _userManager.GetUserId(User) && r.UserId2 == id) && r.Relation == "Blocked").FirstOrDefault();
             if (ur2 != null)
             {
                 ViewBag.Blocked = true;

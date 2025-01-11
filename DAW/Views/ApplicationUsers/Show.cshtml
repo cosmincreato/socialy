@@ -132,6 +132,22 @@
                         <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
                     </div>
                     <div class="d-flex">
+                        @if (!post.DislikedBy.Contains(ViewBag.CurrentUser) && !post.LikedBy.Contains(ViewBag.CurrentUser))
+                        {
+                            <form method="post" asp-action="Like" asp-controller="ApplicationUsers" asp-route-id="@post.Id">
+                                <button type="submit" class="btn btn-primary">Like</button>
+                            </form>
+                            <form method="post" asp-action="Dislike" asp-controller="ApplicationUsers" asp-route-id="@post.Id">
+                                <button type="submit" class="btn btn-primary">Dislike</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary" disabled>Like</button>
+                            <button type="submit" class="btn btn-primary" disabled>Dislike</button>
+                        }
+                    </div>
+                    <div class="d-flex">
                     @if (ViewBag.HasAccess)
                     {
                         <a asp-action="Edit" asp-controller="Posts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
