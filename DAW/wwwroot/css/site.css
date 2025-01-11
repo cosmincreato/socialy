@@ -1,3 +1,11 @@
+:root {
+    --dark-purple: #391054;
+    --normal-purple: #5b2676;
+    --light-purple: #9c72b2;
+    --pastel-purple: #c9a7f1;
+    --danger: #CA0B00;
+}
+
 html {
   font-size: 14px;
 }
@@ -19,4 +27,56 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/* Profile Header */
+.profile-banner {
+    height: 168px;
+    background-color: var(--normal-purple);
+    position: relative;
+}
+
+.profile-picture {
+    width: 168px;
+    height: 168px;
+    object-fit: cover;
+    position: absolute;
+    top: 4rem;
+    left: 1rem;
+}
+
+.profile-info {
+    margin-top: 4.6rem;
+    margin-left: 1.9rem;
+}
+
+
+/* Butoane */
+.btn {
+    background-color: transparent;
+    border-radius: 25px;
+}
+
+.btn:hover {
+    color: white;
+}
+
+.btn-primary {
+    color: var(--normal-purple);
+    border: 2px solid var(--normal-purple);
+}
+
+.btn-primary:hover {
+    border-color: var(--normal-purple);
+    background-color: var(--normal-purple);
+}
+
+.btn-danger {
+    color: var(--danger);
+    border: 2px solid var(--danger);
+}
+
+.btn-danger:hover {
+    border-color: var(--danger);
+    background-color: var(--danger);
 }

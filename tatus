@@ -1,0 +1,313 @@
+[33mcommit 0d9976dd031f7573fdcf984a7808e87d896351bd[m[33m ([m[1;36mHEAD -> [m[1;32muserposts[m[33m)[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Fri Jan 10 15:21:19 2025 +0200
+
+    user posts
+
+[33mcommit fcd12432f989f82e9ecc8b99230288bf019f53d3[m[33m ([m[1;32musercontroller[m[33m)[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Thu Jan 9 12:51:41 2025 +0200
+
+    friendrequests
+
+[33mcommit fc21741a6ef54b892593b5d9396db1824ad9f959[m
+Merge: b71496e b928c34
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Mon Jan 6 17:35:09 2025 +0200
+
+    Merge pull request #16 from TheFluffyBoi2/groups
+    
+    fixed requests
+
+[33mcommit b928c34cbd54efe55207d5d33842c6f8a9aa6ef8[m[33m ([m[1;31morigin/groups[m[33m)[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Mon Jan 6 17:33:25 2025 +0200
+
+    fixed requests
+
+[33mcommit b71496e710668e198ad792d027beabc7fa9ae1dc[m
+Merge: 3553a6a 95ed7fb
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Mon Dec 16 00:34:20 2024 +0200
+
+    Merge pull request #15 from TheFluffyBoi2/usercontroller
+    
+    Usercontroller
+
+[33mcommit 95ed7fb36024b6fd28274438c6d9402f00e81f95[m[33m ([m[1;31morigin/usercontroller[m[33m)[m
+Merge: c0d3e99 3553a6a
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Mon Dec 16 00:33:13 2024 +0200
+
+    Merge pull request #14 from TheFluffyBoi2/master
+    
+    Merge pull request #13 from TheFluffyBoi2/usercontroller
+
+[33mcommit c0d3e99c207554ee34658afab2d956f0e68dba75[m
+Merge: b1c279d a3869f2
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Mon Dec 16 00:32:14 2024 +0200
+
+    Merge branch 'usercontroller' of https://github.com/TheFluffyBoi2/DAW into usercontroller
+
+[33mcommit b1c279d97f1e1d5fcff0205df6541a700f7b90e2[m
+Merge: 32de61b 791fa3f
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Mon Dec 16 00:31:47 2024 +0200
+
+    navbar
+
+[33mcommit 3553a6abc663ae94e3c5e700949f747a6d392ab7[m
+Merge: 791fa3f a3869f2
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Mon Dec 16 00:18:08 2024 +0200
+
+    Merge pull request #13 from TheFluffyBoi2/usercontroller
+    
+    user profile
+
+[33mcommit a3869f29fecfe0177849aae340bf8ed20b2a66df[m
+Merge: 32de61b 791fa3f
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Mon Dec 16 00:17:56 2024 +0200
+
+    Merge branch 'master' into usercontroller
+
+[33mcommit 32de61bfa5df3d6b662b344d8917a897eb3f1405[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Mon Dec 16 00:12:27 2024 +0200
+
+    user profile
+
+[33mcommit 791fa3fc9fc623a2d4f954c1b98fc102f39c2a9e[m
+Merge: 9a37ec7 16ca55c
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Sun Dec 15 20:04:06 2024 +0200
+
+    Merge pull request #11 from TheFluffyBoi2/groups
+    
+    leaveremovefromgroups
+
+[33mcommit 16ca55c3bbeaf8e0ecf7e30a5dd6cb6c9a914492[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Sun Dec 15 20:03:03 2024 +0200
+
+    leaveremovefromgroups
+
+[33mcommit 9a37ec72fe48855f6af97b010e76c0b8101e89f4[m
+Merge: 0e5bc14 543ac55
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Fri Dec 13 19:12:44 2024 +0200
+
+    Merge pull request #10 from TheFluffyBoi2/groups
+    
+    finishing-groups
+
+[33mcommit 543ac552c94c7949fe43f98af507fd6cc649160e[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Fri Dec 13 19:11:07 2024 +0200
+
+    finishing-groups
+
+[33mcommit 0e5bc14c9543171bfd2da59e4cf2bd390e86db06[m
+Merge: e6683c6 a467048
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Thu Dec 12 20:27:53 2024 +0200
+
+    Merge pull request #9 from TheFluffyBoi2/groups
+    
+    wallahi
+
+[33mcommit a46704811b836f56651cae18a0256a0e49e4d0e2[m
+Merge: 192cbf2 e6683c6
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Thu Dec 12 20:27:43 2024 +0200
+
+    Merge branch 'master' into groups
+
+[33mcommit 192cbf2145ca988fd689f62258619932d4ba2768[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Thu Dec 12 20:24:51 2024 +0200
+
+    wallahi
+
+[33mcommit e6683c6cd1650adcf9b0a097735e80e663508c8d[m
+Merge: abff062 b4d58bf
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Thu Dec 12 19:00:25 2024 +0200
+
+    Merge pull request #8 from TheFluffyBoi2/usercontroller
+    
+    user crud v1
+
+[33mcommit b4d58bf7127c2f1ca9b92b522653a8988043a097[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Thu Dec 12 18:59:41 2024 +0200
+
+    user crud v1
+
+[33mcommit abff0622314e364b7cfe15dcd39b991b56c29de2[m
+Merge: 99de414 7b0fa20
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Thu Dec 12 10:31:53 2024 +0200
+
+    Merge pull request #7 from TheFluffyBoi2/groups
+    
+    Groups
+
+[33mcommit 7b0fa2014e74874b879b339573d7786afd345dc3[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Thu Dec 12 10:26:47 2024 +0200
+
+    goruproles
+
+[33mcommit f9ff372fce07d4a017ccd6107d8ff96bf2ac368c[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Mon Dec 9 17:04:38 2024 +0200
+
+    afisare posturi grup
+
+[33mcommit 99de4145eec8fa6306bc512ca252e5a62de0837f[m
+Merge: c5b3878 49d6f47
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Wed Dec 4 18:08:11 2024 +0200
+
+    Merge pull request #6 from TheFluffyBoi2/usercontroller
+    
+    index show prototype
+
+[33mcommit 49d6f478207d3b16cdc199c2c3bfb3684a08fc5d[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Wed Dec 4 17:46:33 2024 +0200
+
+    index show prototype
+
+[33mcommit c5b3878519c995d3aa85ebeffd890b089eb9711c[m[33m ([m[1;32mmaster[m[33m)[m
+Merge: 9c263e5 113bacc
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Wed Dec 4 16:19:34 2024 +0200
+
+    Merge pull request #5 from TheFluffyBoi2/group-gpost
+    
+    Group gpost
+
+[33mcommit 113bacc07fe87e0b81185aaeb3e7c56abc8a9bfc[m[33m ([m[1;31morigin/group-gpost[m[33m)[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Wed Dec 4 15:20:22 2024 +0200
+
+    testing-groups
+
+[33mcommit 74b913a55993d75b8c4ce250df7b7704bf305022[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Wed Dec 4 14:20:48 2024 +0200
+
+    group-grouppost
+
+[33mcommit 9c263e52212c96aa5b94d9a39c649bb8e601297d[m
+Merge: 667f18c eb99c8d
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Wed Dec 4 13:38:06 2024 +0200
+
+    Merge pull request #4 from TheFluffyBoi2/user
+    
+    User
+
+[33mcommit eb99c8d2b6bee82b66298b4d1d845842dd2741ec[m[33m ([m[1;31morigin/user[m[33m)[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Wed Dec 4 13:35:30 2024 +0200
+
+    scaffolded item
+
+[33mcommit 1327ba5581b71d073bcb2f582b795e795ecc510d[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Wed Dec 4 13:22:05 2024 +0200
+
+    end-test
+
+[33mcommit 900572e6d071aab83aa980535c462c07ca27c8a9[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Wed Dec 4 13:21:29 2024 +0200
+
+    test
+
+[33mcommit 667f18c0c8cd131790ffcd8e7f36f7056579adb1[m
+Merge: 15b62ac 7b66af3
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Tue Dec 3 22:18:57 2024 +0200
+
+    Merge pull request #3 from TheFluffyBoi2/post_comment
+    
+    Post comment
+
+[33mcommit 7b66af3814497951c09fc95f5d5f8744db41582f[m[33m ([m[1;31morigin/post_comment[m[33m, [m[1;32mpost_comment[m[33m)[m
+Merge: 961af7d 63f610b
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Tue Dec 3 22:16:41 2024 +0200
+
+    post comment
+
+[33mcommit 961af7d1a76bea28b816cb0c6943540b7ec90fae[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Tue Dec 3 22:08:24 2024 +0200
+
+    post comment models
+
+[33mcommit 63f610b40493d429dd6334912d71a731165d0864[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Tue Dec 3 21:05:26 2024 +0200
+
+    post comment
+
+[33mcommit 15b62ac06a06807116bc187a5195a9f7f8e4dd36[m
+Merge: 94536de b2da499
+Author: Dumitru Sebastian <147382942+TheFluffyBoi2@users.noreply.github.com>
+Date:   Tue Dec 3 20:40:11 2024 +0200
+
+    Merge pull request #2 from TheFluffyBoi2/user
+    
+    User
+
+[33mcommit b2da49909a5f8b17430fd3da1ac2b55d6744b714[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Tue Dec 3 20:37:04 2024 +0200
+
+    user-roles
+
+[33mcommit a7a1df5c565339578cc37439bbc2d1a41316e584[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Tue Dec 3 19:23:03 2024 +0200
+
+    added user
+
+[33mcommit 94536de8968057eeae6d2da71936cbb2f0a4e901[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Tue Dec 3 18:57:52 2024 +0200
+
+    first commit
+
+[33mcommit ba13766498a62eb7b5318f75588b47c99a6779d9[m
+Merge: 9491c27 e0b5aaf
+Author: Mărășoiu Cosmin <95128338+cosmincreato@users.noreply.github.com>
+Date:   Tue Dec 3 18:43:49 2024 +0200
+
+    Merge pull request #1 from TheFluffyBoi2/test
+    
+    commit branch test
+
+[33mcommit e0b5aafe4c12c1aad761a0fabb5ceba8f0876ecd[m[33m ([m[1;31morigin/test[m[33m)[m
+Author: Mărășoiu Cosmin <marasoiu.cos@gmail.com>
+Date:   Tue Dec 3 18:41:36 2024 +0200
+
+    commit branch test
+
+[33mcommit 9491c27f2b9ebd2f0264f2e1b323b0e30b4a0c8c[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Tue Dec 3 18:27:29 2024 +0200
+
+    Add project files.
+
+[33mcommit 23a63f60eb5bf8894e496e0c14a5aace39813ab4[m
+Author: TheFluffyBoi2 <dumitrusebastian2004@gmail.com>
+Date:   Tue Dec 3 18:27:26 2024 +0200
+
+    Add .gitattributes and .gitignore.
