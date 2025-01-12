@@ -82,7 +82,11 @@ namespace DAW.Controllers
             {
                 ViewBag.EsteAdmin = true;
             }
+            else ViewBag.EsteAdmin = false;
+
+            var user = db.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             
+            ViewBag.CurrentUser = user;
             ViewBag.UserCurent = _userManager.GetUserId(User);
 
 
@@ -128,5 +132,6 @@ namespace DAW.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }
