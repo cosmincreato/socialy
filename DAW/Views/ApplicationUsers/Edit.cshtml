@@ -57,14 +57,18 @@
                         <label class="form-check-label" for="privateOption">Private</label>
                     </div>
 
-                    <br /><br />
+                    <br />
                 </div>
 
-                <br />
-
-                <button class="btn btn-sm btn-success" type="submit">Apply Changes</button>
-
+                <button class="btn btn-primary" type="submit">Apply changes</button>
             </form>
+            <br />
+            @if (ViewBag.IsAdmin)
+            {
+                <form asp-action="Delete" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-danger">Delete account</button>
+                </form>
+            }
         </div>
     </div>
 </div>

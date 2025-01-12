@@ -1,20 +1,28 @@
-﻿<div class="requests">
-    <h5>Friend Requests: </h5>
-    <br />
+﻿<h2>Friend requests</h2>
+
+<div class="container mt-4">
     @foreach (var req in ViewBag.FriendRequests)
     {
-        <p>@req.Sender.UserName</p>
-        <p>@req.Date</p>
-        <div class="options d-flex">
-            <form asp-action="Accept" asp-controller="FriendRequests" method="post">
-                <input type="hidden" name="RequestId" value="@req.Id" />
-                <button type="submit" class="btn btn-primary">Accept</button>
-            </form>
-            <form asp-action="Decline" asp-controller="FriendRequests" method="post">
-                <input type="hidden" name="RequestId" value="@req.Id" />
-                <button type="submit" class="btn btn-primary">Decline</button>
-            </form>
+        <div class="card p-10 w-25 mb-2">
+            <a class="text-decoration-none text-reset" href="@Url.Action("Show", "ApplicationUsers", new { id = req.Sender.Id })">
+                <div class="d-flex align-items-center">
+                    <img src="@Url.Content(req.Sender.ProfilePicture)" alt="Profile Picture" class="profile-icon rounded-circle img-fluid">
+                    <div class="ms-3">
+                        <div class="d-flex gap-2 align-items-center">
+                            <h5>@req.Sender.FirstName @req.Sender.LastName</h5>
+                            <form asp-action="Accept" asp-controller="FriendRequests" method="post">
+                                <input type="hidden" name="RequestId" value="@req.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                            </form>
+                            <form asp-action="Decline" asp-controller="FriendRequests" method="post">
+                                <input type="hidden" name="RequestId" value="@req.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Decline</button>
+                            </form>
+                        </div>
+                        <p class="text-muted">@req.Sender.Bio</p>
+                    </div>
+                </div>
+            </a>
         </div>
-        <br />
     }
 </div>

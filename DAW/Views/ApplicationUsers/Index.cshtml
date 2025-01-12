@@ -1,20 +1,18 @@
-﻿
-@foreach (var user in ViewBag.Users)
-{
-    <div class="container mt-4">
-        <div class="card p-10 w-25">
-            <div class="d-flex align-items-center">
-                <img src="@Url.Content(@user.ProfilePicture)" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+﻿<h2>Search results</h2>
 
-                <div class="ms-3">
-                    <h5>@user.FirstName @user.LastName</h5>
-                    <p class="text-muted">@user.Bio</p>
+<div class="container mt-4">
+    @foreach (var user in ViewBag.Users)
+    {
+        <div class="card p-10 w-25 mb-2">
+            <a class="text-decoration-none text-reset" href="@Url.Action("Show", new { id = user.Id })">
+                <div class="d-flex align-items-center">
+                    <img src="@Url.Content(user.ProfilePicture)" alt="Profile Picture" class="profile-icon rounded-circle img-fluid">
+                    <div class="ms-3">
+                        <h5>@user.FirstName @user.LastName</h5>
+                        <p class="text-muted">@user.Bio</p>
+                    </div>
                 </div>
-            </div>
-
-            <a class="btn btn-info" asp-controller="ApplicationUsers"
-               asp-action="Show" asp-route-id="@user.Id">Show Profile</a>
+            </a>
         </div>
-    </div>
-	
-}
+    }
+</div>

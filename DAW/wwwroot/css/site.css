@@ -4,6 +4,7 @@
     --light-purple: #9c72b2;
     --pastel-purple: #c9a7f1;
     --danger: #CA0B00;
+    --success: #376e37;
 }
 
 html {
@@ -45,9 +46,49 @@ body {
     left: 1rem;
 }
 
+.profile-icon {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+}
+
 .profile-info {
     margin-top: 4.6rem;
     margin-left: 1.9rem;
+}
+
+.profile-bio {
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+}
+
+.profile-friends {
+    font-size: 1.1rem;
+}
+
+/* Postari */
+.post-label {
+    background-color: var(--pastel-purple);
+    font-weight: 450;
+    color: var(--dark-purple);
+    border-radius: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.post-date {
+    font-size: 0.8rem;
+}
+
+.post-likes {
+    font-size: 1.2rem;
+    background-color: var(--normal-purple);
+    font-weight: 450;
+    color: white;
+    border-radius: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 0.3rem;
 }
 
 
@@ -79,4 +120,14 @@ body {
 .btn-danger:hover {
     border-color: var(--danger);
     background-color: var(--danger);
+}
+
+.btn-success {
+    color: var(--success);
+    border: 2px solid var(--success);
+}
+
+.btn-success:hover {
+    border-color: var(--success);
+    background-color: var(--success);
 }

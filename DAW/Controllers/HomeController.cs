@@ -52,7 +52,10 @@ namespace DAW.Controllers
             {
                 ViewBag.EsteAdmin = true;
             }
+            
             ViewBag.UserCurent = _userManager.GetUserId(User);
+
+
             return View();
         }
 

@@ -1,23 +1,30 @@
-﻿@foreach (var friend in ViewBag.Friends)
-{
-    @if (ViewBag.CurrentUserId != friend.UserId1)
+﻿@model DAW.Models.ApplicationUser
+<h2>@Model.FirstName's friends list</h2>
+
+<div class="container mt-4">
+    @foreach (var friend in ViewBag.Friends)
     {
-        <div class="d-flex">
-            <img src="@Url.Content(friend.User1.ProfilePicture)" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-dark" style="width: 168px; height: 168px; object-fit: cover;">
-            <p>@friend.User1.UserName</p>
-            <form method="post" asp-action="RemoveFriend" asp-controller="ApplicationUsers" asp-route-id="@friend.UserId1">
-                <button type="submit" class="btn btn-primary">Remove</button>
-            </form>
+
+        var otherUser = Model.Id != friend.UserId1 ? friend.User1 : friend.User2;
+
+        <div class="card p-10 w-25 mb-2">
+            <a class="text-decoration-none text-reset" href="@Url.Action("Show", new { id = otherUser.Id })">
+                <div class="d-flex align-items-center">
+                    <img src="@Url.Content(otherUser.ProfilePicture)" alt="Profile Picture" class="profile-icon rounded-circle img-fluid">
+                    <div class="ms-3">
+                        <div class="d-flex gap-2 align-items-center">
+                            <h5>@otherUser.FirstName @otherUser.LastName</h5>
+                            @if (ViewBag.CurrentUser == Model.Id)
+                            {
+                                <form method="post" asp-action="RemoveFriend" asp-controller="ApplicationUsers" asp-route-modelUserId="@Model.Id" asp-route-otherUserId="@otherUser.Id">
+                                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                                </form>
+                            }
+                        </div>
+                        <p class="text-muted">@otherUser.Bio</p>
+                    </div>
+                </div>
+            </a>
         </div>
     }
-    else 
-    {
-        <div class="d-flex">
-            <img src="@Url.Content(friend.User2.ProfilePicture)" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-dark" style="width: 168px; height: 168px; object-fit: cover;">
-            <p>@friend.User2.UserName</p>
-            <form method="post" asp-action="RemoveFriend" asp-controller="ApplicationUsers" asp-route-id="@friend.UserId2">
-                <button type="submit" class="btn btn-primary">Remove</button>
-            </form>
-        </div>
-    }
-} 
+</div>
