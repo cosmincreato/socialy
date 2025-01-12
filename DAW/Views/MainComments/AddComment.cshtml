@@ -1,7 +1,7 @@
 ﻿@model DAW.Models.Comment
 
 <div class="group-form">
-    <form asp-action="AddComment" asp-controller="UserComments" method="post">
+    <form asp-action="AddComment" asp-controller="MainComments" method="post">
         <div class="form-group">
             <input type="hidden" name="PostId" value="@Model.PostId" />
             <label>Content</label>
