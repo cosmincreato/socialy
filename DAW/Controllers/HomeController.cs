@@ -47,7 +47,7 @@ namespace DAW.Controllers
             {
                 offset = (currentPage - 1) * _perPage;
             }
-            var fposts = db.Posts.Where(p => friendsId1.Contains(p.UserId));
+            var fposts = db.Posts.Where(p => friendsId1.Contains(p.UserId) && !(p is GroupPost));
             if (friendsId1.Count() != 0 && fposts.Count() >= 10)
             {
                 var posts = db.Posts.Where(p => friendsId1.Contains(p.UserId) && !(p is GroupPost)).Include(p => p.User).Include(p => p.Comments).ThenInclude(c => c.User).OrderByDescending(p => p.Date).ToList();
