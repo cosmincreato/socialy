@@ -7,6 +7,7 @@
     </div>
 }
 
+<!--Profile Header-->
 <div class="container mt-4">
     <div class="card rounded">
         <!--Banner-->
@@ -17,38 +18,47 @@
             <!--Nume si bio-->
             <div>
                 <div class="d-flex gap-2 align-items-center justify-content-between">
-                    <h3>@Model.FirstName @Model.LastName</h3>
-                    <!--Buton de edit-->
-                    @if (ViewBag.HasAccess)
-                    {
-                        <a style="margin-right: 1.5rem;" class="btn btn-primary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">Edit profile</a>
-                    }
-                    else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends!=true && ViewBag.Clicked!=true && ViewBag.Blocked!=true) {
+                    <div class="d-flex gap-2">
+                        <h2>@Model.FirstName @Model.LastName</h2>
+                        <!--Butoane add block unblock-->
+                        @if ((!ViewBag.HasAccess || (ViewBag.IsAdmin == true && ViewBag.CurrentUser != Model.Id)) && ViewBag.AlreadyFriends != true && ViewBag.Clicked != true && ViewBag.Blocked != true)
+                        {
                         <form asp-action="Add" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
                         <form asp-action="Block" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
                             <button type="submit" class="btn btn-danger">Block</button>
                         </form>
-                    }
-                    else if (!ViewBag.HasAccess && ViewBag.AlreadyFriends != true && ViewBag.Clicked == true && ViewBag.Blocked != true) {
+                        }
+                        else if ((!ViewBag.HasAccess || (ViewBag.IsAdmin == true && ViewBag.CurrentUser != Model.Id)) && ViewBag.AlreadyFriends != true && ViewBag.Clicked == true && ViewBag.Blocked != true)
+                        {
                         <button type="submit" class="btn btn-secondary" disabled>Add</button>
                         <button type="submit" class="btn btn-secondary" disabled>Block</button>
-                    }
-                    else if (!ViewBag.HasAccess && ViewBag.Blocked == true) {
+                        }
+                        else if ((!ViewBag.HasAccess || (ViewBag.IsAdmin == true && ViewBag.CurrentUser != Model.Id)) && ViewBag.Blocked == true)
+                        {
                         <form asp-action="Unblock" asp-controller="ApplicationUsers" asp-route-id="@Model.Id" method="post">
-                            <button type="submit" class="btn btn-secondary">Unblock</button>
+                            <button type="submit" class="btn btn-danger">Unblock</button>
                         </form>
 
+                        }
+                    </div>
+                    <!--Buton de edit-->
+                    @if (ViewBag.HasAccess)
+                    {
+                        <a style="margin-right: 1.5rem;" class="btn btn-primary" asp-controller="ApplicationUsers" asp-action="Edit" asp-route-id="@Model.Id">Edit profile</a>
                     }
                 </div>
-                <p class="text-muted">@Model.Bio</p>
-                <p><b>@ViewBag.FriendCount</b> friends</p>
+                <p class="profile-bio">@Model.Bio</p>
+                <form asp-action="Friends" asp-controller="ApplicationUsers" asp-route-id="@Model.Id">
+                    <button type="submit" class="border-0 bg-transparent profile-friends"><b><i class="bi bi-people-fill"></i> @ViewBag.FriendCount</b> Friends</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
+<!--Modal pentru new post-->
 <div class="modal fade" id="newPost-@Model.Id" tabindex="-1" aria-labelledby="newPostLabel-@Model.Id" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -99,119 +109,165 @@
     </div>
 </div>
 
-<div class="container mt-4">
-    <h4>Posts</h4>
-    @if (ViewBag.HasAccess)
-    {
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPost-@Model.Id">New Post</button>
-    }
-    @if (Model.Posts != null) {
-        @foreach (Post post in ViewBag.Posts)
-        {
-            @if (post is not GroupPost)
+<!--Postari-->
+@if (!Model.IsPublic && (!ViewBag.HasAccess || (ViewBag.IsAdmin == true && ViewBag.CurrentUser != Model.Id)) && ViewBag.AlreadyFriends != true && ViewBag.Clicked != true && ViewBag.Blocked != true)
+{
+    <div class="container mt-4">
+        <h2>This account is private.</h2>
+        <P class="profile-bio">Only @Model.FirstName's friends have access to their posts. Click the "Add" button to send a friend request.</P>
+    </div>
+}
+else if ((!ViewBag.HasAccess || (ViewBag.IsAdmin == true && ViewBag.CurrentUser != Model.Id)) && ViewBag.Blocked == true)
+{
+    <div class="container mt-4">
+		<h2>@Model.FirstName is blocked.</h2>
+    </div>
+}
+else
+{
+    <div class="container mt-4">
+        <div class="d-flex gap-2 align-items-center">
+            <h2>Posts</h2>
+            @if (ViewBag.HasAccess)
             {
-                <br />
-                <br />
-                <div class="card p-10" style="min-height: 200px;">
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
-                        @if (@post.Image != null)
-                        {
-                            <img src="@Url.Content(@post.Image)" alt="Image" class="rounded img-fluid" style="width: 250px; height: 250px; object-fit: cover;" />
-                        }
-                        @if (post.Video != null)
-                        {
-                            <div class="video-container">
-                                <iframe width="560" height="315"
-                                        src=@post.Video
-                                        frameborder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen>
-                                </iframe>
-                            </div>
-                        }
-                        <h5 class="card-title">@Html.Raw(post.Content)</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
-                        <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
-                    </div>
-                    <div class="d-flex">
-                        @if (!post.DislikedBy.Contains(ViewBag.CurrentUser) && !post.LikedBy.Contains(ViewBag.CurrentUser))
-                        {
-                            <form method="post" asp-action="Like" asp-controller="ApplicationUsers" asp-route-id="@post.Id">
-                                <button type="submit" class="btn btn-primary">Like</button>
-                            </form>
-                            <form method="post" asp-action="Dislike" asp-controller="ApplicationUsers" asp-route-id="@post.Id">
-                                <button type="submit" class="btn btn-primary">Dislike</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-primary" disabled>Like</button>
-                            <button type="submit" class="btn btn-primary" disabled>Dislike</button>
-                        }
-                    </div>
-                    <div class="d-flex">
-                    @if (ViewBag.HasAccess)
-                    {
-                        <a asp-action="Edit" asp-controller="Posts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
-                        <form method="post" asp-action="Delete" asp-controller="Posts" asp-route-id="@post.Id">
-                            <button type="submit" class="btn btn-primary">Delete</button>
-                        </form>
-                    }
-                    </div>
-                <div class="add-comments mt-3 mb-3">
-                    <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="UserComments" asp-route-id="@post.Id">Add Comment</a>
-                </div>
-                @if (post.Comments != null && post.Comments.Any()) {
-                    @foreach (Comment comment in post.Comments)
-                    {
-                        <div class="d-flex flex-column mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">@comment.User.UserName</h5>
-                                    <p class="card-text">@Html.Raw(comment.Content)</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPost-@Model.Id"><b><i class="bi bi-plus-lg"></i> New post</b></button>
+            }
+        </div>
+        @if (Model.Posts != null)
+        {
+            @foreach (Post post in ViewBag.Posts)
+            {
+                @if (post is not GroupPost)
+                {
+                    <br />
+                    <div class="card p-10" style="min-height: 200px;">
+                        <div class="card-body d-flex flex-column">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">@Html.Raw(post.Content)</h5>
+                                <div class="d-flex gap-2">
+                                        @if (ViewBag.HasAccess)
+                                        {
+                                            <a asp-action="Edit" asp-controller="Posts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
+                                            <form method="post" asp-action="Delete" asp-controller="Posts" asp-route-id="@post.Id">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        }
                                 </div>
-                                <div class="d-flex justify-content-between">
-                                    @if (ViewBag.IsAdmin || ViewBag.CurrentUser == comment.UserId)
-                                    {
-                                        <a class="btn btn-outline-primary" asp-controller="UserComments" asp-action="Edit" asp-route-id="@comment.Id">Edit</a>
-                                        <form asp-action="Delete" asp-controller="UserComments" asp-route-id="@comment.Id" method="post">
-                                            <button type="submit" class="btn btn-outline-primary">Delete</button>
+                                </div>
+                                <p class="post-date card-subtitle mb-2 text-muted">@post.Date</p>
+                                @if (post.Label != null && post.Label.Length > 0)
+                                {
+                                <p class="post-label d-inline card-subtitle mb-2">@post.Label</p>
+                                }
+                            </div>
+                            @if (@post.Image != null)
+                            {
+                                <img src="@Url.Content(@post.Image)" alt="Image" class="rounded img-fluid" style="width: 250px; height: 250px; object-fit: cover;" />
+                            }
+                            @if (post.Video != null)
+                            {
+                                <div class="video-container">
+                                    <iframe width="560" height="315"
+                                            src=@post.Video
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen>
+                                    </iframe>
+                                </div>
+                            }
+                            
+                            @if (!post.DislikedBy.Contains(ViewBag.CurrentUser) && !post.LikedBy.Contains(ViewBag.CurrentUser))
+                            {
+                                    <div class="d-flex gap-2 mt-2">
+                                        <form method="post" asp-action="Like" asp-controller="ApplicationUsers" asp-route-id="@post.Id" class="like-form">
+                                            <button type="submit" class="btn btn-primary">
+                                                @post.Likes <i class="bi bi-heart-fill"></i>
+                                            </button>
                                         </form>
-                                    }
+                                        <form method="post" asp-action="Dislike" asp-controller="ApplicationUsers" asp-route-id="@post.Id" class="dislike-form">
+                                            <button type="submit" class="btn btn-primary">
+                                                @post.Dislikes <i class="bi bi-heartbreak-fill"></i>
+                                            </button>
+                                        </form>
+                                        <a class="btn btn-primary" asp-action="AddComment" asp-controller="UserComments" asp-route-id="@post.Id"><i class="bi bi-chat"></i></a>
+                                    </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex gap-2 align-items-center mt-1">
+                                        <button type="submit" class="post-likes text-decoration-none border-0" disabled>
+                                            @post.Likes <i class="bi bi-heart-fill"></i>
+                                        </button>
+                                        <button type="submit" class="post-likes text-decoration-none border-0" disabled>
+                                            @post.Dislikes <i class="bi bi-heartbreak-fill"></i>
+                                        </button>
+                                    <a class="btn btn-primary" asp-action="AddComment" asp-controller="UserComments" asp-route-id="@post.Id"><i class="bi bi-chat"></i></a>
                                 </div>
-                            </div>
-                        </div>
+                            }
+                    <!--Comments-->
+                    @if (post.Comments != null && post.Comments.Any()) {
+                        @foreach (Comment comment in post.Comments)
+                        {
+                                    <div class="container mt-4">
+                                        <div class="card p-10">
+                                            <div class="card-body">
+                                                <div class="d-flex w-100">
+                                                    <img src="@Url.Content(comment.User.ProfilePicture)" alt="Profile Picture" class="profile-icon rounded-circle img-fluid">
+                                                    <div class="flex-grow-1 ms-3">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <a asp-action="Show" asp-controller="ApplicationUsers" asp-route-id="@comment.User.Id" class="h5 mb-1 text-decoration-none text-reset">@comment.User.FirstName @comment.User.LastName</a>
+                                                                <p class="mb-0">@Html.Raw(comment.Content)</p>
+                                                            </div>
+                                                            <div class="d-flex gap-2">
+                                                                @if (ViewBag.IsAdmin || ViewBag.CurrentUser == comment.UserId)
+                                                                {
+                                                                    <a class="btn btn-sm btn-primary" asp-controller="UserComments" asp-action="Edit" asp-route-id="@comment.Id">Edit</a>
+                                                                    <form asp-action="Delete" asp-controller="UserComments" asp-route-id="@comment.Id" method="post">
+                                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                                    </form>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                        }
                     }
+                    </div>
+                    </div>
                 }
-                </div> 
             }
         }
-    }
-</div>
+    </div>
 
-<div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1"
-                   aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            @for (int i = 1; i <= ViewBag.LastPage; i++)
-            {
+    <div class="container mt-4">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=1"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @for (int i = 1; i <= ViewBag.LastPage; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                    </li>
+                }
                 <li class="page-item">
                     <a class="page-link"
-                       href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                       href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
                 </li>
-            }
-            <li class="page-item">
-                <a class="page-link"
-                   href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
+            </ul>
+        </nav>
+    </div>
+}

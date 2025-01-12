@@ -4,6 +4,7 @@ using DAW.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -38,13 +39,14 @@ namespace DAW.Controllers
             {
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
             }
-            List<string> usersId = db.Users.Where(u => u.FirstName == search || u.LastName == search)
+            List<string> usersId = db.Users.Where(u => u.FirstName == search || u.LastName == search || u.FirstName + ' ' + u.LastName == search)
                                 .OrderByDescending(u => u.UserName).Select(u => u.Id).ToList();
             ViewBag.SearchString = search;
             ViewBag.Users = db.Users.Include(u => u.Posts).Where(u => usersId.Contains(u.Id)).OrderByDescending(u => u.UserName);
             return View();
         }
 
+        
         [Authorize(Roles="Admin, User")]
         public IActionResult ShowAll()
         {
@@ -75,22 +77,12 @@ namespace DAW.Controllers
             AlreadySent(id);
             AlreadyFriends(id);
             IsAdmin();
-            CurrentUser(id);
+            CurrentUser();
             ViewBag.HasAccess = HasAccess(user);
 
             //
             ViewBag.FriendCount = GetFriendCount(id);
 
-
-            // daca profilul e privat, doar cei cu acces pot vedea
-            if (!user.IsPublic)
-                {
-                    if (HasAccess(user) || ViewBag.AlreadyFriends == true)
-                    {
-                        return View(user);
-                    }
-                    return Forbid();
-                }
             if (IsBlocked(id))
             {
                 return Forbid();
@@ -185,6 +177,7 @@ namespace DAW.Controllers
         {
             ApplicationUser user = db.Users.Include("Posts")
                 .Where(_user => _user.Id == id).First();
+            IsAdmin();
 
             if (HasAccess(user))
             {
@@ -245,6 +238,21 @@ namespace DAW.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            System.Diagnostics.Debug.WriteLine("-------");
+            System.Diagnostics.Debug.WriteLine(id + " " + "test");
+            System.Diagnostics.Debug.WriteLine("--------");
+            ApplicationUser? user = db.Users.Include("Posts").Where(u => u.Id == id).First();
+            db.Users.Remove(user);
+            db.SaveChanges();
+            TempData["message"] = "User deleted";
+            TempData["messageType"] = "alert-success";
+            return Redirect("/Home/Index");
+        }
+
         [Authorize(Roles = "Admin, User")]
         [HttpPost]
         public IActionResult Add(string id)
@@ -277,28 +285,29 @@ namespace DAW.Controllers
         }
 
         [Authorize(Roles = "Admin, User")]
-        public IActionResult Friends()
+        public IActionResult Friends(string id)
         {
-            ViewBag.Friends = db.UserRelationships.Where(r => (r.UserId1 == _userManager.GetUserId(User)
-                                                                                    || r.UserId2 == _userManager.GetUserId(User))
-                                                                                    && r.Relation == "Friends").Include(r => r.User1).Include(r => r.User2);
-            ViewBag.CurrentUserId = _userManager.GetUserId(User);
-            return View();
+            ViewBag.Friends = db.UserRelationships.Where(r => (r.UserId1 == id || r.UserId2 == id)
+                                                        && r.Relation == "Friends").Include(r => r.User1)
+                                                        .Include(r => r.User2);
+            ApplicationUser user = db.Users.Find(id);
+            CurrentUser();
+            return View(user);
         }
 
         [Authorize(Roles = "Admin, User")]
         [HttpPost]
-        public IActionResult RemoveFriend(string id)
+        public IActionResult RemoveFriend(string modelUserId, string otherUserId)
         {
-            UserRelationships? ur = db.UserRelationships.Where(ur => ((ur.UserId1 == _userManager.GetUserId(User) && ur.UserId2 == id)
-                                                                || (ur.UserId1 == id && ur.UserId2 == _userManager.GetUserId(User))) && ur.Relation == "Friends")
+            UserRelationships? ur = db.UserRelationships.Where(ur => ((ur.UserId1 == modelUserId && ur.UserId2 == otherUserId)
+                                                                || (ur.UserId1 == otherUserId && ur.UserId2 == modelUserId)) && ur.Relation == "Friends")
                                                                 .FirstOrDefault();
             if (ur != null)
             {
                 db.UserRelationships.Remove(ur);
                 db.SaveChanges();
             }
-            return RedirectToAction("Friends", "ApplicationUsers");
+            return RedirectToAction("Friends", "ApplicationUsers", new { id = modelUserId });
         }
 
         [Authorize(Roles = "Admin, User")]
@@ -430,7 +439,7 @@ namespace DAW.Controllers
         }
 
         [NonAction]
-        public void CurrentUser(string id)
+        public void CurrentUser()
         {
             ViewBag.CurrentUser = _userManager.GetUserId(User);
         }

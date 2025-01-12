@@ -94,7 +94,7 @@ namespace DAW.Controllers
 			if (videoUrl.Contains("youtu.be/"))
 			{
 				int startIndex = videoUrl.IndexOf("youtu.be/") + "youtu.be/".Length;
-				return videoUrl.Substring(startIndex, 11); // Extract 11-character ID
+				return videoUrl.Substring(startIndex, 11);
 			}
 
 			if (videoUrl.Contains("v="))
@@ -104,10 +104,17 @@ namespace DAW.Controllers
 				int ampersandIndex = id.IndexOf("&");
 				if (ampersandIndex > -1)
 				{
-					id = id.Substring(0, ampersandIndex); // Remove extra parameters
+					id = id.Substring(0, ampersandIndex);
 				}
 				return id;
 			}
+
+            if (videoUrl.Contains("embed/"))
+            {
+                int startIndex = videoUrl.IndexOf("embed/") + "embed/".Length;
+                string id = videoUrl.Substring(startIndex);
+                return id;
+            }
 
 			return string.Empty;
 		}

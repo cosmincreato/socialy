@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DAW.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <script src="https://cdn.tiny.cloud/1/2wm0v5e0ysxcgcsw2ysgqvccelsvowgpgcxl72say0yy97qv/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
@@ -21,9 +22,6 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUsers" asp-action="ShowAll">Users</a>
                         </li>
                         <li class="nav-item">
@@ -31,10 +29,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="FriendRequests" asp-action="Show">Friend requests</a>
-                            <i class="bi bi-people-fill"></i>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUsers" asp-action="Friends">Friends</a>
                         </li>
                         <li class="nav-item">
                             <form method="GET" asp-controller="ApplicationUsers" asp-action="Index">
