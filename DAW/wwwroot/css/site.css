@@ -100,7 +100,7 @@ body {
 
 .post-user {
     font-size: 1rem;
-    text-align: start;
+    text-align: start !important;
 }
 
 .post-likes {
