@@ -1,82 +1,125 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-<p> @ViewBag.Test</p>
+﻿<div class="text-center">
+    <h2>Welcome to <span class="light">Socialy</span>, @ViewBag.CurrentUser.FirstName!</h2>
+    <a href="@Url.Action("Show", "ApplicationUsers", new { id = ViewBag.CurrentUser.Id })" class="btn btn-primary">
+        Your profile
+    </a>
+</div>
+
 @if (ViewBag.Posts != null)
 {
     @foreach (Post post in ViewBag.Posts)
     {
         <br />
-        <br />
-        <div class="card mb-3" style="min-height: 200px;">
+        <div class="card p-10" style="min-height: 200px;">
             <div class="card-body d-flex flex-column">
-                <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
-                <h5 class="card-title">@Html.Raw(post.Content)</h5>
-                <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
-                <p class="card-text">@post.User.UserName</p>
-                <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
-            </div>
-            <div class="d-flex">
+                <div>
+                    <div class="d-flex gap-2">
+                        <img src="@Url.Content(post.User.ProfilePicture)" alt="Profile Picture" class="profile-icon-post rounded-circle img-fluid" />
+                        <div align="center">
+                            <p class="post-user card-subtitle mb-2">@post.User.FirstName @post.User.LastName</p>
+                            <p class="post-date card-subtitle mb-2 text-muted">@post.Date</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">@Html.Raw(post.Content)</h5>
+                        <div class="d-flex gap-2">
+                            @if (ViewBag.EsteAdnin == true)
+                            {
+                                <a asp-action="Edit" asp-controller="Home" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
+                                <form method="post" asp-action="Delete" asp-controller="Home" asp-route-id="@post.Id">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                    @if (post.Label != null && post.Label.Length > 0)
+                    {
+                        <p class="post-label d-inline card-subtitle mb-2">@post.Label</p>
+                    }
+                </div>
+                @if (@post.Image != null)
+                {
+                    <img src="@Url.Content(@post.Image)" alt="Image" class="rounded img-fluid" style="width: 250px; height: 250px; object-fit: cover;" />
+                }
+                @if (post.Video != null)
+                {
+                    <div class="video-container">
+                        <iframe width="560" height="315"
+                                src=@post.Video
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                }
+
                 @if (!post.DislikedBy.Contains(ViewBag.UserCurent) && !post.LikedBy.Contains(ViewBag.UserCurent))
                 {
-                    <form method="post" asp-action="Like" asp-controller="Home" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Like</button>
-                    </form>
-                    <form method="post" asp-action="Dislike" asp-controller="Home" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Dislike</button>
-                    </form>
+                    <div class="d-flex gap-2 mt-2">
+                        <form method="post" asp-action="Like" asp-controller="Home" asp-route-id="@post.Id" class="like-form">
+                            <button type="submit" class="btn btn-primary">
+                                @post.Likes <i class="bi bi-heart-fill"></i>
+                            </button>
+                        </form>
+                        <form method="post" asp-action="Dislike" asp-controller="Home" asp-route-id="@post.Id" class="dislike-form">
+                            <button type="submit" class="btn btn-primary">
+                                @post.Dislikes <i class="bi bi-heartbreak-fill"></i>
+                            </button>
+                        </form>
+                        <a class="btn btn-primary" asp-action="AddComment" asp-controller="MainComments" asp-route-id="@post.Id"><i class="bi bi-chat"></i></a>
+                    </div>
                 }
                 else
                 {
-                    <button type="submit" class="btn btn-primary" disabled>Like</button>
-                    <button type="submit" class="btn btn-primary" disabled>Dislike</button>
-                }
-            </div> 
-            <div class="d-flex">
-                @if (ViewBag.UserCurent == post.UserId || ViewBag.EsteAdmin == true)
-                {
-                    <a asp-action="Edit" asp-controller="Home" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
-                    <form method="post" asp-action="Delete" asp-controller="Home" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                    </form>
-                }
-            </div>
-
-            <br />
-            <div class="add-comments mt-3 mb-3">
-                <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="MainComments" asp-route-id="@post.Id">Add Comment</a>
-            </div>
-            @if (post.Comments != null && post.Comments.Any())
-            {
-                @foreach (Comment comment in post.Comments)
-                {
-                    <div class="d-flex flex-column mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">@comment.User.UserName</h5>
-                                <p class="card-text">@Html.Raw(comment.Content)</p>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                @if (ViewBag.EsteAdmin == true || ViewBag.UserCurent == comment.UserId)
-                                {
-                                    <a class="btn btn-outline-primary" asp-controller="MainComments" asp-action="Edit" asp-route-id="@comment.Id">Edit</a>
-                                }
-                                @if (ViewBag.EsteAdmin == true || ViewBag.UserCurent == comment.UserId)
-                                {
-                                    <form asp-action="Delete" asp-controller="MainComments" asp-route-id="@comment.Id" method="post">
-                                        <button type="submit" class="btn btn-outline-primary">Delete</button>
-                                    </form>
-                                }
-                            </div>
-                        </div>
+                    <div class="d-flex gap-2 align-items-center mt-1">
+                        <button type="submit" class="post-likes text-decoration-none border-0" disabled>
+                            @post.Likes <i class="bi bi-heart-fill"></i>
+                        </button>
+                        <button type="submit" class="post-likes text-decoration-none border-0" disabled>
+                            @post.Dislikes <i class="bi bi-heartbreak-fill"></i>
+                        </button>
+                        <a class="btn btn-primary" asp-action="AddComment" asp-controller="MainComments" asp-route-id="@post.Id"><i class="bi bi-chat"></i></a>
                     </div>
                 }
-            }
+                <!--Comments-->
+                @if (post.Comments != null && post.Comments.Any())
+                {
+                    @foreach (Comment comment in post.Comments)
+                    {
+                        <div class="container mt-4">
+                            <div class="card p-10">
+                                <div class="card-body">
+                                    <div class="d-flex w-100">
+                                        <img src="@Url.Content(comment.User.ProfilePicture)" alt="Profile Picture" class="profile-icon rounded-circle img-fluid">
+                                        <div class="flex-grow-1 ms-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <a asp-action="Show" asp-controller="ApplicationUsers" asp-route-id="@comment.User.Id" class="h5 mb-1 text-decoration-none text-reset">@comment.User.FirstName @comment.User.LastName</a>
+                                                    <p class="mb-0">@Html.Raw(comment.Content)</p>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    @if (ViewBag.EsteAdmin || ViewBag.UserCurent == comment.UserId)
+                                                    {
+                                                        <a class="btn btn-sm btn-primary" asp-controller="MainComments" asp-action="Edit" asp-route-id="@comment.Id">Edit</a>
+                                                        <form asp-action="Delete" asp-controller="MainComments" asp-route-id="@comment.Id" method="post">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
         </div>
     }
 }
 
-<div>
+<div class="container mt-4">
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
