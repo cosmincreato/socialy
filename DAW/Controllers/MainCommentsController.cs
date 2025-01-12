@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DAW.Controllers
 {
-    public class UserCommentsController : Controller
+    public class MainCommentsController : Controller
     {
         private readonly ApplicationDbContext db;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public UserCommentsController(
+        public MainCommentsController(
             ApplicationDbContext context,
             IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager,
@@ -23,6 +23,11 @@ namespace DAW.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [Authorize(Roles = "Admin, User")]
         public IActionResult AddComment(int id)
         {
@@ -41,13 +46,12 @@ namespace DAW.Controllers
             {
                 com.PostId = PostId;
                 var Post = db.Posts.First(p => p.Id == PostId);
-                var uId = Post.UserId;
                 com.UserId = _userManager.GetUserId(User);
                 db.Comments.Add(com);
                 db.SaveChanges();
                 TempData["message"] = "Comment added";
                 TempData["messageType"] = "alert-success";
-                return RedirectToAction("Show", "ApplicationUsers", new { id = uId });
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -78,10 +82,9 @@ namespace DAW.Controllers
                 com.Date = DateTime.Now;
                 db.SaveChanges();
                 var Post = db.Posts.FirstOrDefault(p => p.Id == com.PostId);
-                var uId = Post.UserId;
                 TempData["message"] = "Comment edited";
                 TempData["messageType"] = "alert-success";
-                return RedirectToAction("Show", "ApplicationUsers", new { id = uId });
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -105,7 +108,7 @@ namespace DAW.Controllers
             TempData["messageType"] = "alert-success";
             db.Comments.Remove(com);
             db.SaveChanges();
-            return RedirectToAction("Show", "ApplicationUsers", new { id = uId });
+            return RedirectToAction("Index", "Home");
         }
     }
 }
