@@ -56,6 +56,12 @@ body {
     object-fit: cover;
 }
 
+.profile-icon-post {
+    width = 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
 .profile-info {
     margin-top: 4.6rem;
     margin-left: 1.9rem;

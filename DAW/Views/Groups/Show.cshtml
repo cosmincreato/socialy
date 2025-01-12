@@ -3,12 +3,13 @@
 @if (TempData["message"] != null)
 {
     <div class="alert @ViewBag.Alert" role="alert">
-    @ViewBag.Message
-      </div>
+        @ViewBag.Message
+    </div>
 }
 
-    <br />
-<div class="d-flex">
+<br />
+
+<div class="d-flex gap-2">
 
     @if (ViewBag.EsteAdmin || ViewBag.EsteModerator)
     {
@@ -26,15 +27,14 @@
     {
         <div class="delete">
             <form asp-action="Delete" asp-controller="Groups" asp-route-id="@Model.Id" method="post">
-                <button type="submit" class="btn btn-primary">Delete</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     }
 
     @if (ViewBag.EsteAdmin || ViewBag.EsteModerator)
     {
-        <div class="re
-quests">
+        <div class="requests">
             <a asp-action="Show" asp-controller="Requests" asp-route-id="@Model.Id" class="btn btn-primary">Show Requests</a>
         </div>
     }
@@ -55,7 +55,7 @@ quests">
     @if (ViewBag.EsteMembru && !ViewBag.EsteModerator)
     {
         <form method="post" asp-action="Leave" asp-controller="Groups" asp-route-id="@Model.Id">
-            <button type="submit" class="btn btn-primary">Leave</button>
+            <button type="submit" class="btn btn-danger">Leave</button>
         </form>
     }
 </div>
@@ -89,58 +89,74 @@ quests">
 <br />
 
 @if (ViewBag.Posts != null) {
+    <div class="container mt-4">
     @foreach (GroupPost post in ViewBag.Posts)
     {
         <br />
         <br />
-        <div class="card mb-3" style="min-height: 200px;">
+        <div class="card p-10" style="min-height: 200px;">
             <div class="card-body d-flex flex-column">
-                <h6 class="card-subtitle mb-2 text-muted">@post.Date</h6>
-                <h5 class="card-title">@Html.Raw(post.Content)</h5>
-                <h6 class="card-subtitle mb-2 text-muted">@post.Label</h6>
-                <p class="card-text">@post.User.UserName</p>
-                <p>Likes: @post.Likes Dislikes: @post.Dislikes</p>
+                <div>
+                    <div class="d-flex gap-2">
+                        <img src="@Url.Content(post.User.ProfilePicture)" alt="Profile Picture" class="profile-icon-post rounded-circle img-fluid" />
+                        <div align="center">
+                            <p class="post-user card-subtitle mb-2 text-muted">@post.User.UserName</p>
+                            <p class="post-date card-subtitle mb-2 text-muted">@post.Date</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">@Html.Raw(post.Content)</h5>
+                        <div class="d-flex gap-2">
+                            @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin)
+                            {
+                                <a asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
+                            }
+                            @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin || ViewBag.EsteModerator)
+                            {
+                                <form method="post" asp-action="Delete" asp-controller="GroupPosts" asp-route-id="@post.Id">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                    @if (post.Label != null && post.Label.Length > 0)
+                    {
+                        <p class="post-label d-inline card-subtitle mb-2">@post.Label</p>
+                    }
+                </div>
             </div>
-            <div class="d-flex">
                 @if (!post.DislikedBy.Contains(ViewBag.UserCurent) && !post.LikedBy.Contains(ViewBag.UserCurent))
                 {
-                    <form method="post" asp-action="Like" asp-controller="Groups" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Like</button>
-                    </form>
-                    <form method="post" asp-action="Dislike" asp-controller="Groups" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Dislike</button>
-                    </form>
+                    <div class="d-flex gap-2 ms-3">
+                        <form method="post" asp-action="Like" asp-controller="Groups" asp-route-id="@post.Id">
+                            <button type="submit" class="btn btn-primary"> @post.Likes <i class="bi bi-heart-fill"></i></button>
+                        </form>
+                        <form method="post" asp-action="Dislike" asp-controller="Groups" asp-route-id="@post.Id">
+                            <button type="submit" class="btn btn-primary">@post.Dislikes <i class="bi bi-heartbreak-fill"></i></button>
+                        </form>
+                        @if (ViewBag.EsteMembru || ViewBag.EsteAdmin)
+                        {
+                            <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="Comments" asp-route-id="@post.Id"><i class="bi bi-chat"></i></a>
+                        }
+                    </div>
                 }
                 else
                 {
-                    <button type="submit" class="btn btn-primary" disabled>Like</button>
-                    <button type="submit" class="btn btn-primary" disabled>Dislike</button>
-                }
-            </div>
-            <div class="d-flex">
-                @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin)
-                {
-                    <a asp-action="Edit" asp-controller="GroupPosts" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
-                }
-                @if ((ViewBag.UserCurent == post.UserId && ViewBag.EsteMembru) || ViewBag.EsteAdmin || ViewBag.EsteModerator)
-                {
-                    <form method="post" asp-action="Delete" asp-controller="GroupPosts" asp-route-id="@post.Id">
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                    </form>
-                }
-            </div>
+                    <div class="d-flex gap-2 ms-3">
+                        <button type="submit" class="btn btn-primary" disabled>@post.Likes <i class="bi bi-heart-fill"></i></button>
+                        <button type="submit" class="btn btn-primary" disabled>@post.Dislikes <i class="bi bi-heartbreak-fill"></i></button>
+                        @if (ViewBag.EsteMembru || ViewBag.EsteAdmin)
+                        {
+                            <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="Comments" asp-route-id="@post.Id"><i class="bi bi-chat"></i></a>
+                        }
+                    </div>
 
-            <br />
-            <div class="add-comments mt-3 mb-3">
-                @if (ViewBag.EsteMembru || ViewBag.EsteAdmin)
-                {
-                    <a class="btn btn-outline-primary" asp-action="AddComment" asp-controller="Comments" asp-route-id="@post.Id">Add Comment</a>
                 }
-            </div>
+
             @if (post.Comments != null && post.Comments.Any()) {
                 @foreach (Comment comment in post.Comments)
                 {
-                    <div class="d-flex flex-column mb-3">
+                        <div class="container mt-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">@comment.User.UserName</h5>
@@ -154,7 +170,7 @@ quests">
                                 @if (ViewBag.EsteAdmin || ViewBag.EsteModerator || ViewBag.UserCurent == comment.UserId)
                                 {
                                     <form asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id" method="post">
-                                        <button type="submit" class="btn btn-outline-primary">Delete</button>
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
                                     </form>
                                 }
                             </div>
@@ -164,6 +180,7 @@ quests">
             }
         </div>
     }
+    </div>
 }
 
 <div>
