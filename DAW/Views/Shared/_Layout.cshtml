@@ -28,13 +28,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">Groups</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="FriendRequests" asp-action="Show">Friend requests</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="FriendRequests" asp-action="Show"><i class="h4 mov bi bi-person-plus-fill"></i></a>
                         </li>
                         <li class="nav-item">
                             <form method="GET" asp-controller="ApplicationUsers" asp-action="Index">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control"
-                                           placeholder="Search names" name="search"
+                                           placeholder="Search Socialy" name="search"
                                            value="@ViewBag.SearchString">
                                     <button class="btn btn-outline-success"
                                             type="submit">
