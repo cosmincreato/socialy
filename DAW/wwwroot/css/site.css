@@ -30,6 +30,10 @@ body {
   margin-bottom: 60px;
 }
 
+.mov {
+    color: var(--normal-purple);
+}
+
 /* Profile Header */
 .profile-banner {
     height: 168px;
