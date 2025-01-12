@@ -12,7 +12,10 @@
         <div class="card-body">
             <h5 class="card-title">@group.Name</h5>
             <h6 class="card-text">@group.Description</h6>
-            <p class="card-text">@group.User.UserName</p>
+            <div>
+                <img src=@Url.Content(group.User.ProfilePicture) alt="Profile Picture" class="profile-icon-post rounded-circle img-fluid" />
+                <p class="card-text">@group.User.FirstName @group.User.LastName</p>
+            </div>
         </div>
         <div class="d-felx">
             <a asp-action="Show" asp-controller="Groups" asp-route-id="@group.Id" class="btn btn-primary">Show</a>
