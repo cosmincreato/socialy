@@ -52,7 +52,7 @@ namespace DAW.Controllers
         }
 
         
-        [Authorize(Roles="Admin, User")]
+        [Authorize(Roles="Admin")]
         public IActionResult ShowAll()
         {
             ViewBag.Users = db.Users.Include("Posts").OrderByDescending(u => u.UserName);
