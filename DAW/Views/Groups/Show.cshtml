@@ -127,7 +127,7 @@
             </div>
                 @if (!post.DislikedBy.Contains(ViewBag.UserCurent) && !post.LikedBy.Contains(ViewBag.UserCurent))
                 {
-                    <div class="d-flex gap-2 ms-3">
+                    <div class="d-flex gap-2 ms-3 mb-2">
                         <form method="post" asp-action="Like" asp-controller="Groups" asp-route-id="@post.Id">
                             <button type="submit" class="btn btn-primary"> @post.Likes <i class="bi bi-heart-fill"></i></button>
                         </form>
