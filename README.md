@@ -7,12 +7,16 @@
 
 Socialy is a micro-social media application designed to create more intimate spaces for people to connect with like-minded individuals. Developed with **ASP.NET Core 8.0 MVC** and stylized with **Bootstrap**, it offers a wide range of functionalities.
 
+![image](https://i.imgur.com/s5SttXW.png)
+
 ## User Roles
 
 - **Guest (Unregistered User)** - Can browse the app but cannot post, comment, join groups, or send friend requests.
 - **Registered User** - Has their own profile and can communicate with other people through posts, comments and groups.
 - **Moderator** - Responsible for managing groups and their members.
 - **Admin** - Responsible for the overall management of the platform, with the ability to create, edit, and delete any type of content, as well as manage user permissions.
+
+![image2](https://i.imgur.com/Ku6POWw.png)
 
 ## Features  
 
