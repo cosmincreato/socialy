@@ -5,7 +5,7 @@
 </div>
 
 
-Socialy is a micro-social media application designed to create more intimate spaces for people to connect with like-minded individuals. Developed with **ASP.NET Core 8.0 MVC** and stylized with **Bootstrap**, it offers a wide range of functionalities.
+Socialy is a social media application designed to create more intimate spaces for people to connect with like-minded individuals. Developed with **ASP.NET Core 8.0 MVC** and stylized with **Bootstrap**, it offers a wide range of functionalities.
 
 ![image](https://i.imgur.com/s5SttXW.png)
 
