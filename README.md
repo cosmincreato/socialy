@@ -1,4 +1,4 @@
-# Socialy
+# Socialy 💬
 
 <div align="center">
   <img src="https://i.imgur.com/CfLXE3U.png" alt="Logo">
